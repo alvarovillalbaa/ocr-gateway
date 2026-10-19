@@ -1,0 +1,30 @@
+{
+  "verifiedAt": "2026-10-19",
+  "repository": "https://github.com/alvarovillalbaa/ocr-gateway",
+  "visibility": "public",
+  "defaultBranch": "main",
+  "release": "https://github.com/alvarovillalbaa/ocr-gateway/releases/tag/v0.1.0",
+  "releaseSourceCommit": "0ac6b99c4180144dc48d4b28dbc09970c6e8ec1f",
+  "assets": [
+    {
+      "name": "alvarovillalbaa-ocr-gateway-0.1.0.tgz",
+      "size": 71999,
+      "sha256": "73985b4286cd50017b7d3391954850fe554513acd23600b7fb96520e86b4395a"
+    },
+    {
+      "name": "ocr_gateway_client-0.1.0-py3-none-any.whl",
+      "size": 20469,
+      "sha256": "066eafe35bbd66a5b3b1f6edfbaef64ff7652dc6ed19242e9f92a95e914659ac"
+    }
+  ],
+  "checks": [
+    "GitHub reports public repository and main default branch",
+    "Repository public HTTP response is 200",
+    "Remote main commit matches release source commit at publication",
+    "Release is published, not draft; three assets report uploaded",
+    "GitHub asset digests match locally built artifact SHA256 values",
+    "Public release downloads pass shasum -a 256 -c SHA256SUMS"
+  ],
+  "notPublished": ["npm registry", "PyPI registry", "hosted gateway service"],
+  "runtimeProof": "See verification.md for scoped evidence and unverified provider/HTTP/native OCR surfaces."
+}
