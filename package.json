@@ -1,0 +1,33 @@
+{
+  "name": "@alvarovillalbaa/ocr-gateway",
+  "version": "0.1.0",
+  "description": "Multi-provider document OCR gateway with citations, chunks, BYOK, routing and agent tools.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {"type":"git","url":"git+https://github.com/alvarovillalbaa/ocr-gateway.git"},
+  "homepage": "https://github.com/alvarovillalbaa/ocr-gateway#readme",
+  "bugs": "https://github.com/alvarovillalbaa/ocr-gateway/issues",
+  "keywords": ["ocr","document","parsing","gateway","mcp","citations","react","pdf"],
+  "engines": {"node":">=22"},
+  "files": ["dist","README.md","LICENSE","PROVIDERS.md","API.md","SECURITY.md","openapi.json","docs","examples","python/README.md","python/examples/local_client.py",".env.example"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {"types":"./dist/index.d.ts","import":"./dist/index.js"},
+    "./core": {"types":"./dist/core.d.ts","import":"./dist/core.js"},
+    "./server": {"types":"./dist/server.d.ts","import":"./dist/server.js"},
+    "./local": {"types":"./dist/local.d.ts","import":"./dist/local.js"},
+    "./react": {"types":"./dist/react.d.ts","import":"./dist/react.js"}
+  },
+  "bin": {"ocr-gateway":"./dist/cli.js"},
+  "scripts": {
+    "build":"tsc -p tsconfig.json",
+    "check":"tsc -p tsconfig.json --noEmit",
+    "demo":"npm run build && node examples/demo.mjs",
+    "schema":"node scripts/generate-openapi.mjs",
+    "prepack":"npm run build"
+  },
+  "peerDependencies": {"react":">=18"},
+  "peerDependenciesMeta": {"react":{"optional":true}},
+  "devDependencies": {"@types/node":"^22.20.5","@types/react":"^19.3.0","typescript":"^7.0.2"}
+}

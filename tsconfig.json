@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext",
+    "lib":["ES2022","DOM","DOM.Iterable"],"types":["node","react"],
+    "strict":true,"declaration":true,"sourceMap":true,"outDir":"dist","rootDir":"src",
+    "skipLibCheck":true,"noUncheckedIndexedAccess":true,"noUnusedLocals":true,"noUnusedParameters":true
+  },
+  "include":["src/**/*.ts"]
+}

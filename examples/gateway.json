@@ -1,0 +1,5 @@
+{
+  "enabledProviders": ["mistral", "openai", "firecrawl"],
+  "defaults": {"mode": "auto", "maxProviders": 2, "timeoutMs": 120000, "chunking": {"maxCharacters": 1600, "overlap": 160}},
+  "router": {"confidenceThreshold": 0.55, "rules": [{"mimeTypes": ["application/pdf"], "providers": ["mistral", "openai"]}]}
+}
