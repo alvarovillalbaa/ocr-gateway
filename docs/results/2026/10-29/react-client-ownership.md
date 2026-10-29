@@ -67,3 +67,12 @@ The report retains exact source/output hashes, every case name and normalized
 TAP with the private workspace root removed. The initial extraction wrapper's
 escaped-regex error produced no report and was corrected without rerunning
 tests. Source publication remains separate from a new distributable release.
+
+Source and evidence were published at `64627566bbd74f626cc38521c4b16db64cf9955f`. All 46 local/remote
+leaf identities (path, mode, type and blob SHA) matched an untruncated GitHub
+tree and its main ref; zero Actions runs were returned. The
+[publication receipt](react-client-ownership-publication.json) retains the proof
+boundary. Five operation-owned baseline/raw-output files were removed after
+matching digests/identities, checking open handles and confirming normalized
+evidence publication. Actual source, test cases and dependencies remain intact.
+

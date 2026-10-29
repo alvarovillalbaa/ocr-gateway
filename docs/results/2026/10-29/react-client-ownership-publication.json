@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "ocr-gateway.react-client-ownership-publication",
+  "observed_at_utc": "2026-10-29T21:39:20Z",
+  "repository": "https://github.com/alvarovillalbaa/ocr-gateway",
+  "ref": "refs/heads/main",
+  "source_commit": "64627566bbd74f626cc38521c4b16db64cf9955f",
+  "remote_ref_matched": true,
+  "remote_tree_truncated": false,
+  "local_remote_leaf_count": 46,
+  "compared_leaf_fields": [
+    "path",
+    "mode",
+    "type",
+    "sha"
+  ],
+  "all_leaf_identities_match": true,
+  "github_actions_runs_at_observation": 0,
+  "checks": {
+    "baseline": "one expected stuck-loading assertion failure",
+    "patched": "10 actual-source ReactDOM/jsdom cases passed",
+    "targeted_no_emit_typecheck": "passed",
+    "canonical_report": "react-client-ownership-checks.json"
+  },
+  "temporary_cleanup": "Removed five operation-owned baseline/TAP/stderr files after matching every digest and file identity, verifying no open handles and confirming the normalized report was published. Source, test fixtures, dependencies and unrelated files remain preserved.",
+  "limits": [
+    "Source publication and focused frontend proof only. No emitted SDK build, new packaged release, browser or provider acceptance."
+  ]
+}
