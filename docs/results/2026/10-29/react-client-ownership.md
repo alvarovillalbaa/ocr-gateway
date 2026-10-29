@@ -75,4 +75,3 @@ tree and its main ref; zero Actions runs were returned. The
 boundary. Five operation-owned baseline/raw-output files were removed after
 matching digests/identities, checking open handles and confirming normalized
 evidence publication. Actual source, test cases and dependencies remain intact.
-
