@@ -182,6 +182,12 @@ export function DocumentUpload({ baseUrl }: { baseUrl: string }) {
 
 Pass an absolute proxy base URL suitable for your framework. The hook exposes data/loading/error/parse/cancel, aborts superseded requests and ignores stale results. CORS alone does not authenticate application users. Render document content as text or sanitize Markdown/HTML before rendering.
 
+Changing `client` clears the visible result, error and busy state and cancels
+that client's pending work. Requests started for its replacement keep their
+own loading state. The same client retains its last result while another parse
+loads. Callbacks retained for an earlier client stay scoped to it and cannot
+update or cancel the current client's view.
+
 ## Tool calls and MCP
 
 ```ts
@@ -223,3 +229,7 @@ git diff --check
 ```
 
 The demo uses synthetic document data and a local adapter, with no upstream API calls. [Verification evidence](docs/verification.md) records what was checked and what remains unverified. No provider accuracy benchmark, paid live-provider execution, hosted service, or npm/PyPI registry publication is implied by a source/package build.
+
+The React client-replacement repair is available in source. Its
+[focused evidence](docs/results/2026/10-29/react-client-ownership.md) is separate
+from the existing v0.1.0 release artifacts, which were not rebuilt by this work.

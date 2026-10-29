@@ -11,3 +11,11 @@ Citations identify extraction provenance and exact text offsets in normalized pa
 The self-hosted server hashes scoped gateway API keys and supports revocation, rate limits, body limits, request deadlines, optional request BYOK, and explicit CORS. A gateway key grants access to a deployment; upstream accounts and credits remain necessary. The built-in file key store and rate limits target one server process.
 
 Provider-specific options are allowlisted by adapter. They cannot replace endpoint/authentication/source. Custom adapters are trusted server configuration, never HTTP-supplied code.
+
+Each React client gets a separate request/state lease. Snapshot identity hides
+the preceding client's data/error/loading during replacement, and effect cleanup
+invalidates and aborts only its captured lease. Work started before passive setup
+is stored on that lease and published by setup. Generation/controller ownership
+changes before abort so synchronous abort listeners cannot let a superseded call
+dispatch or clear newer state. Caller-owned promises still settle independently;
+retained callbacks may call their original client without updating the new view.

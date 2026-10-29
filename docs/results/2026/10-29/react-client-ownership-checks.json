@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "kind": "ocr-gateway.react-client-ownership",
+  "recorded_at_utc": "2026-10-29T21:34:01.041050+00:00",
+  "base_commit": "117d8694b23922061a79b987af390b8f1f36cd07",
+  "source_files": [
+    {
+      "path": "src/react.ts",
+      "bytes": 2523,
+      "sha256": "78f38cd425c91c9505fd75d6cd66da88c74de921996fabc986cd30a1cfa947ee"
+    },
+    {
+      "path": "tests/unit/react-ownership.test.mjs",
+      "bytes": 13753,
+      "sha256": "b50f3edd9faa43476162bf4c2f2c7a105da064cdd78ce6c3263d453132fcafaa"
+    }
+  ],
+  "protected_unchanged_files": [
+    {
+      "path": ".env.example",
+      "sha256": "761e137c97188952055dac49ef1ad81de8c977ac249a78e95ff6e278510c3571"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "4bf67004c8ac6d3222c1b5bf96a812fa3fa3bdc20483fc3a15d9500795bb6c8f"
+    },
+    {
+      "path": ".npmignore",
+      "sha256": "643690c7c7e79bde1c9f834d4e25a7345b6fa8c5d4fa87459d43c2d788a46dec"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "448373a6c01af3b828a2f75dfa8f82a2dca8301ff52c151e99d6db8885e3ba26"
+    },
+    {
+      "path": "API.md",
+      "sha256": "8252e1dd7cf6a2dee5a90b58f1b9fe12c359dc061d779b77834f9f13f79000bb"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7edafcd8ebca4ecabedfad6e3c3d4872ce0ef6b49c3658a8b6e644cfb884d32d"
+    },
+    {
+      "path": "PROVIDERS.md",
+      "sha256": "66546a38bfbb66053363ddb14ead3ddd48ce98b8835dffb897d2e47ef57e0ca5"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "4fef9ba06c6b131afe6044ea4c9c68093fef230c1839cc270fe58d7250ef2c21"
+    },
+    {
+      "path": "docs/publication.json",
+      "sha256": "baca18b0093e89706720a74961e12f50f17c2e96330264b90a241ad6b91c1d4f"
+    },
+    {
+      "path": "docs/verification.md",
+      "sha256": "5dd1e00b09ce0b0dcb35eedc5bd76375309556fca4eb51b43e8cfa8351c8526d"
+    },
+    {
+      "path": "examples/demo.mjs",
+      "sha256": "83a7dbe38f8b1ded6c777cbb95e0ab3857371e864d96cfdb4704db05ea25564b"
+    },
+    {
+      "path": "examples/gateway.json",
+      "sha256": "f40bff3a9a44da79784ed968d9018d4e36e61471aa8d9abbcc1330329e2898c5"
+    },
+    {
+      "path": "examples/sample.html",
+      "sha256": "5a0a4be9262ed664a08797a1ebf81547799ae7c503db2052f5e5cfce1be45923"
+    },
+    {
+      "path": "openapi.json",
+      "sha256": "1955ac9252fb06e9ee5adc03744d9b038cf9125e92758640015af48eee890a04"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "72fcdb895478d1f3f3cce48f15167c51d35be0a728858049723118706c2f7ce1"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a3c4e37e58ae3fc1b3521a637ce57f2d61931244f464d4cb2c9ee4eaa40ffb41"
+    },
+    {
+      "path": "python/LICENSE",
+      "sha256": "7edafcd8ebca4ecabedfad6e3c3d4872ce0ef6b49c3658a8b6e644cfb884d32d"
+    },
+    {
+      "path": "python/README.md",
+      "sha256": "fe7e587bd41508c74c4bcf75ecc125f37c8928e0452b504ba3868c14f64954a7"
+    },
+    {
+      "path": "python/examples/local_client.py",
+      "sha256": "b141f4990c6db986f2c1d31bb68a44795a9293010edfe9b61511db56cf45cadd"
+    },
+    {
+      "path": "python/ocr_gateway/__init__.py",
+      "sha256": "181721d87736c7754249db2dff936a71d3ebe43c409597ef30e859c86a45bc8c"
+    },
+    {
+      "path": "python/ocr_gateway/client.py",
+      "sha256": "9f95e0fc34018250393041aae62dec854370a524a14e48270f0d67c9f5f6c460"
+    },
+    {
+      "path": "python/ocr_gateway/local.py",
+      "sha256": "8f304dc6501511b70dbda10d884b73b2e529bda4c2fe425a10a937b8213cfeb8"
+    },
+    {
+      "path": "python/ocr_gateway/py.typed",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "python/ocr_gateway/types.py",
+      "sha256": "dbb28ef4942758967fb08d3255e11ab048f5667496755426ba1c4f14502a3948"
+    },
+    {
+      "path": "python/pyproject.toml",
+      "sha256": "375b88eba597ea9a9459c0d4581e22085ad63538fda07c1e5d3478532a2e5707"
+    },
+    {
+      "path": "scripts/generate-openapi.mjs",
+      "sha256": "7b90d85264d9cf5eae2bca737f34358583f8f0b28a0cd29cd1bcb335ec9d7106"
+    },
+    {
+      "path": "src/cli.ts",
+      "sha256": "7f9b3d392df9a35fb2a0c41d14bd6051e7f1777eff69ca84db262a6552af9220"
+    },
+    {
+      "path": "src/core.ts",
+      "sha256": "520482524f34f973c2aa7ea1440ad268f58b41622a24c70c850a0b3fc2dbfc34"
+    },
+    {
+      "path": "src/http.ts",
+      "sha256": "174abc8ac8a744265039b0cf4c5cc34403d1f79060cdde3a2dd634c08b9d0097"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "cf57cd5f1b3500fa886ded31f9447228d1d5984ecf688d28d6db67f73363a52b"
+    },
+    {
+      "path": "src/keys.ts",
+      "sha256": "87c0336d459c9196b2800149e6967f4896323ea1a35fb8da31e656ac0211f248"
+    },
+    {
+      "path": "src/local.ts",
+      "sha256": "ecc3e46c1580fc4273e856cd1d9daad81e18584d0b85b34db1e716e514b41016"
+    },
+    {
+      "path": "src/normalize.ts",
+      "sha256": "56811888c8dc62e684bbd25a7d832d4b70abc7028ad1e180434319f1ae298486"
+    },
+    {
+      "path": "src/providers.ts",
+      "sha256": "815dc6058dde2a5358462265abf0c2f83261d353620bc705f3c3c3c67e3d9d91"
+    },
+    {
+      "path": "src/routing.ts",
+      "sha256": "29ced7c12122b6eb560ef500935bd9df69e68fd2be94faaa4b60c6ae2b95a6fc"
+    },
+    {
+      "path": "src/server.ts",
+      "sha256": "8fed555c973a75f4f4fd36dfdfaeee06678053cf29724f3beb5d7a5628832711"
+    },
+    {
+      "path": "src/tools.ts",
+      "sha256": "9601379dcb94aa91fbb010cd8b2fd061d8da28b0ec614dd85833d33f9ff96afd"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "ab3ea8b7fbb4b74ab04d4527dd65fd8e96ed60aba8ef61531b5437657ea131d3"
+    },
+    {
+      "path": "src/validation.ts",
+      "sha256": "9aa3f7efcd8a9a83863ceca782da8082be0a4462b6d2c096f2e7da185cd80d97"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "2a1ad5ab04fd681611be7951d0eed6127850f7ecccdf8dd957155a15962fb198"
+    }
+  ],
+  "case_names": [
+    "client replacement clears a pending parse and restores an idle upload control",
+    "replacement hides prior data and errors before its passive setup publishes",
+    "late prior-client resolve reject and cancel cannot clear replacement work",
+    "a replacement parse started in a child layout effect survives old passive cleanup",
+    "StrictMode replay and unmount preserve only current owned work",
+    "overlapping parses retain same-client data and ignore superseded failures",
+    "cancel publishes idle before an abort listener starts a newer parse",
+    "a superseding parse yields to a newer synchronous abort-listener parse",
+    "errors normalize and explicit cancellation fences a late successful result",
+    "obsolete callbacks cannot publish into a returned client owner"
+  ],
+  "runtime": {
+    "node": "v26.8.2",
+    "react_fixture": {
+      "mode": "existing_read_only",
+      "owner": "alvarovillalbaa/search-gateway",
+      "dependency_snapshot": "f891c1378ca20fb90e007d9dc9610aa4740dfc45",
+      "package_lock_sha256": "85b811ecc4dcd591f335c8e5e82c8248573bda1423daf6fa2d2bd36faed26e81",
+      "packages": [
+        {
+          "name": "react",
+          "version": "19.3.1",
+          "package_json_sha256": "9cc9c3de5441a2eea7f41f52f3f2a15a4fc51f90c0b72741f0d7638643a85e67"
+        },
+        {
+          "name": "react-dom",
+          "version": "19.3.1",
+          "package_json_sha256": "89d54f11575c9b0f7819962d9d72a31970dfb4d103f07e8b1d1b37e6d1fc3258"
+        },
+        {
+          "name": "jsdom",
+          "version": "30.1.3",
+          "package_json_sha256": "d05b7f08c60feb43d726447adf6f8eaec18913a8f0fe8cbd7e3af06f7c8510ba"
+        },
+        {
+          "name": "typescript",
+          "version": "7.0.2",
+          "package_json_sha256": "3722b30210616a13a3213ded11575ba6b2dbab10c32a5ef67afca8513e27017e"
+        }
+      ],
+      "resolution": "Only bare react imported by the exact hook URL maps to the fixture; all other resolution delegates, then the hook is deregistered."
+    },
+    "product_import": "actual TypeScript hook source via native Node type stripping; no dist output"
+  },
+  "baseline": {
+    "process_exit": 1,
+    "status": "expected_failure",
+    "source_sha256": "2810e3cc24f083cb190ef59822dfa530ceb5f2c2c53612cb111a30c59b7a123a",
+    "bytes": 952,
+    "sha256": "828219b79557c03eab2468296f861453507f5d5d881bcdcac5d4956d4d778b64",
+    "cases": [
+      {
+        "status": "not ok",
+        "number": 1,
+        "name": "client replacement clears a pending parse and restores an idle upload control"
+      }
+    ],
+    "totals": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "normalized_tap": "TAP version 13\n# Subtest: client replacement clears a pending parse and restores an idle upload control\nnot ok 1 - client replacement clears a pending parse and restores an idle upload control\n  ---\n  duration_ms: 80.527\n  type: 'test'\n  location: '<repo>/tests/unit/react-ownership.test.mjs:104:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    true !== false\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: false\n  actual: true\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file://<repo>/tests/unit/react-ownership.test.mjs:112:12)\n    async Test.run (node:internal/test_runner/test:1409:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 896.253291\n"
+  },
+  "patched": {
+    "process_exit": 0,
+    "status": "passed",
+    "bytes": 2261,
+    "sha256": "2d5b2e63989579cf7bb2d54b19df59fd9e6a82bc20c9741639e4228f77bb89d0",
+    "cases": [
+      {
+        "status": "ok",
+        "number": 1,
+        "name": "client replacement clears a pending parse and restores an idle upload control"
+      },
+      {
+        "status": "ok",
+        "number": 2,
+        "name": "replacement hides prior data and errors before its passive setup publishes"
+      },
+      {
+        "status": "ok",
+        "number": 3,
+        "name": "late prior-client resolve reject and cancel cannot clear replacement work"
+      },
+      {
+        "status": "ok",
+        "number": 4,
+        "name": "a replacement parse started in a child layout effect survives old passive cleanup"
+      },
+      {
+        "status": "ok",
+        "number": 5,
+        "name": "StrictMode replay and unmount preserve only current owned work"
+      },
+      {
+        "status": "ok",
+        "number": 6,
+        "name": "overlapping parses retain same-client data and ignore superseded failures"
+      },
+      {
+        "status": "ok",
+        "number": 7,
+        "name": "cancel publishes idle before an abort listener starts a newer parse"
+      },
+      {
+        "status": "ok",
+        "number": 8,
+        "name": "a superseding parse yields to a newer synchronous abort-listener parse"
+      },
+      {
+        "status": "ok",
+        "number": 9,
+        "name": "errors normalize and explicit cancellation fences a late successful result"
+      },
+      {
+        "status": "ok",
+        "number": 10,
+        "name": "obsolete callbacks cannot publish into a returned client owner"
+      }
+    ],
+    "totals": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "normalized_tap": "TAP version 13\n# Subtest: client replacement clears a pending parse and restores an idle upload control\nok 1 - client replacement clears a pending parse and restores an idle upload control\n  ---\n  duration_ms: 79.798709\n  type: 'test'\n  ...\n# Subtest: replacement hides prior data and errors before its passive setup publishes\nok 2 - replacement hides prior data and errors before its passive setup publishes\n  ---\n  duration_ms: 12.703792\n  type: 'test'\n  ...\n# Subtest: late prior-client resolve reject and cancel cannot clear replacement work\nok 3 - late prior-client resolve reject and cancel cannot clear replacement work\n  ---\n  duration_ms: 9.147666\n  type: 'test'\n  ...\n# Subtest: a replacement parse started in a child layout effect survives old passive cleanup\nok 4 - a replacement parse started in a child layout effect survives old passive cleanup\n  ---\n  duration_ms: 8.33275\n  type: 'test'\n  ...\n# Subtest: StrictMode replay and unmount preserve only current owned work\nok 5 - StrictMode replay and unmount preserve only current owned work\n  ---\n  duration_ms: 9.340334\n  type: 'test'\n  ...\n# Subtest: overlapping parses retain same-client data and ignore superseded failures\nok 6 - overlapping parses retain same-client data and ignore superseded failures\n  ---\n  duration_ms: 8.061375\n  type: 'test'\n  ...\n# Subtest: cancel publishes idle before an abort listener starts a newer parse\nok 7 - cancel publishes idle before an abort listener starts a newer parse\n  ---\n  duration_ms: 7.584791\n  type: 'test'\n  ...\n# Subtest: a superseding parse yields to a newer synchronous abort-listener parse\nok 8 - a superseding parse yields to a newer synchronous abort-listener parse\n  ---\n  duration_ms: 7.45125\n  type: 'test'\n  ...\n# Subtest: errors normalize and explicit cancellation fences a late successful result\nok 9 - errors normalize and explicit cancellation fences a late successful result\n  ---\n  duration_ms: 12.625375\n  type: 'test'\n  ...\n# Subtest: obsolete callbacks cannot publish into a returned client owner\nok 10 - obsolete callbacks cannot publish into a returned client owner\n  ---\n  duration_ms: 10.077625\n  type: 'test'\n  ...\n1..10\n# tests 10\n# suites 0\n# pass 10\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 658.131833\n"
+  },
+  "stderr": [
+    {
+      "phase": "baseline",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "phase": "patched",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "targeted_typecheck": {
+    "typescript": "7.0.2",
+    "no_emit": true,
+    "status": "passed",
+    "scope": "hook and its type imports only",
+    "skip_lib_check": true,
+    "initial_invocation": {
+      "exit": 1,
+      "diagnostic": "TS5112: explicit files require --ignoreConfig when a root tsconfig is present",
+      "code_compiled": false
+    },
+    "corrected_invocation": "--ignoreConfig with explicit strict, noUncheckedIndexedAccess, noUnusedLocals/noUnusedParameters and the project target/module/lib/types options"
+  },
+  "bounds": {
+    "node_test_timeout_ms": 15000,
+    "test_concurrency": 1,
+    "body_timeouts_ms": 3000
+  },
+  "limits": [
+    "Frontend ReactDOM/jsdom fixtures only; no browser engine, HTTP server, live provider, database, model call or native device.",
+    "React 19.3.1 fixture checked; no React 18 or other runtime compatibility matrix claim.",
+    "No dependency install, emitted package/app build, CI change or new release artifact.",
+    "Raw local output hashes retained; normalized TAP replaces the workspace root and contains no private local path."
+  ]
+}
