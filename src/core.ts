@@ -4,7 +4,11 @@ import {chooseProviders} from './routing.js';
 import {normalizeDocument} from './normalize.js';
 import {GatewayError,validateRequest} from './validation.js';
 import {withDeadline} from './http.js';
-import type {GatewayOptions,ParseClient,ParseRequest,ParseResult,ParsedDocument} from './types.js';
+import type {GatewayOptions,ParseClient,ParseRequest,ParseResult,ParsedDocument,ProviderInfo} from './types.js';
+
+function supportsMimeType(patterns:string[],mimeType:string|undefined):boolean {
+  return patterns.some(pattern=>pattern===mimeType||pattern==='*/*'||(pattern.endsWith('/*')&&mimeType?.startsWith(pattern.slice(0,-1))));
+}
 
 export const PRESETS:Record<'fast'|'balanced'|'rich',Partial<Omit<ParseRequest,'document'>>> = {
   fast:{mode:'auto',maxProviders:1,timeoutMs:30000,chunking:{maxCharacters:1600,overlap:160}},
@@ -17,14 +21,17 @@ export function createOCRGateway(options:GatewayOptions={}){
   const keys={...(options.providerKeys??{})};
   const enabled=new Set(options.enabledProviders??adapters.map(a=>a.id));
   if([...enabled].some(id=>!adapters.some(a=>a.id===id)))throw new GatewayError('unknown_provider','Unknown enabled provider');
-  const gateway:ParseClient & {providers:()=>{id:string;name:string;mimeTypes:string[];features:string[];enabled:boolean;configured:boolean}[]}={
-    providers:()=>adapters.map(a=>({id:a.id,name:a.name,mimeTypes:a.mimeTypes,features:a.features,enabled:enabled.has(a.id),configured:!a.requiresKey||!!keys[a.id]})),
+  const gateway:ParseClient & {providers:()=>ProviderInfo[]}={
+    providers:()=>adapters.map(a=>({id:a.id,name:a.name,mimeTypes:a.mimeTypes,features:a.features,...(a.featureMimeTypes!==undefined?{featureMimeTypes:a.featureMimeTypes}:{}),enabled:enabled.has(a.id),configured:!a.requiresKey||!!keys[a.id]})),
     async parse(input:ParseRequest,call={}){
       const started=Date.now();const request=validateRequest({...PRESETS.balanced,...options.defaults,...input});
       const requestKeys={...keys,...request.providerKeys};
       const unknown=[...(request.providers??[]),...(request.excludeProviders??[]),...Object.keys(request.providerKeys??{}),...Object.keys(request.providerOptions??{})].find(id=>!adapters.some(a=>a.id===id));
       if(unknown)throw new GatewayError('unknown_provider',`Unknown provider: ${unknown}`);
-      const candidates=adapters.filter(a=>enabled.has(a.id)&&(!request.providers||request.providers.includes(a.id))&&!request.excludeProviders?.includes(a.id)&&(!a.requiresKey||!!requestKeys[a.id])&&(!request.document.url||a.supportsUrl!==false)&&a.mimeTypes.some(m=>m===request.document.mimeType||m==='*/*'||(m.endsWith('/*')&&request.document.mimeType?.startsWith(m.slice(0,-1))))&&(request.features??[]).every(f=>a.features.includes(f)));
+      const candidates=adapters.filter(a=>enabled.has(a.id)&&(!request.providers||request.providers.includes(a.id))&&!request.excludeProviders?.includes(a.id)&&(!a.requiresKey||!!requestKeys[a.id])&&(!request.document.url||a.supportsUrl!==false)&&supportsMimeType(a.mimeTypes,request.document.mimeType)&&(request.features??[]).every(feature=>{
+        const formats=a.featureMimeTypes?.[feature];
+        return a.features.includes(feature)&&(formats===undefined||supportsMimeType(formats,request.document.mimeType));
+      }));
       if(!candidates.length)throw new GatewayError('no_provider','No enabled, configured provider supports this document and requested features',503);
       return withDeadline(request.timeoutMs??120000,call.signal,async signal=>{
         const routing=await chooseProviders(request,candidates,options.router??{},options.fetch??fetch,signal);

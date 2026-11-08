@@ -115,7 +115,19 @@ node dist/cli.js parse --file report.docx --local --providers local
 node dist/cli.js serve --local
 ```
 
-The Python package includes bounded native extraction for text, HTML, structured text and office XML archives. PDF/image OCR needs optional local libraries/tools. Local extraction does not interpret charts and diagrams; use a vision-capable hosted adapter or your own model for those. See [Python setup](python/README.md).
+The Python package includes bounded native extraction for text, HTML, structured
+text and office XML archives. The 0.2.0 source also reads referenced native
+DOCX/PPTX/XLSX chart caches: titles, series, sparse categories/values and source
+provenance become typed chart blocks with citations/chunks. Cached values may
+be stale; workbooks/formulas are never resolved/evaluated. This does not
+interpret raster charts or diagrams. PDF/image OCR needs optional local tools.
+See the [chart contract](docs/native-ooxml-charts.md) and [Python setup](python/README.md).
+
+Request `features: ['charts']` locally only for DOCX/PPTX/XLSX. Discovery exposes
+optional `featureMimeTypes` restrictions so other local formats are rejected
+before Python startup. Original v0.1.0 archives above do not include this
+feature; the 0.2.0 candidate has a separate
+[installed-package check scope](docs/proposals/native-ooxml-chart-checks.md).
 
 ## Citations, visual content and chunks
 

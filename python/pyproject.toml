@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ocr-gateway-client"
-version = "0.1.0"
+version = "0.2.0"
 description = "Typed Python client and bounded local parsers for OCR Gateway"
 readme = "README.md"
 requires-python = ">=3.11"

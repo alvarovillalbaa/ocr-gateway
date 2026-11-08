@@ -22,6 +22,14 @@ Format lists are deliberately limited to what each adapter sends. A provider may
 
 ## Credentials and endpoint trust
 
+The opt-in local adapter's 0.2.0 chart capability reads referenced native
+DOCX/PPTX/XLSX caches, with explicit status, unverified freshness and source-part
+provenance. Optional `featureMimeTypes` restricts charts to those formats before
+Python dispatch; other local formats keep their existing extraction support.
+No renderer, workbook resolution, formula evaluation or chart/diagram visual
+understanding is introduced. See the [native contract](docs/native-ooxml-charts.md)
+and [primary chart sources](docs/references/native-ooxml-chart-sources.md).
+
 Keep provider credentials in your server process. `keysFromEnv()` reads the variables above; `providerKeys` supplies the same keys by provider ID for in-process use or server-authorized BYOK. The gateway's access keys authenticate your users and do not replace upstream provider credentials.
 
 Endpoint variables are trusted deployment configuration, captured by `builtInProviders(env)`. They must be HTTPS URLs without user information, query strings or fragments. `AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT` is the resource root, for example `https://YOUR-RESOURCE.cognitiveservices.azure.com`. `DOCLING_ENDPOINT` is the root of your Docling Serve deployment. `UNSTRUCTURED_API_URL` is the complete Partition endpoint; its default is `https://api.unstructuredapp.io/general/v0/general`. Requests cannot override endpoints, authentication, document sources, callbacks or transport settings through provider options. Redirects are rejected.

@@ -25,6 +25,8 @@ import xml.etree.ElementTree as ET
 import zipfile
 from typing import Any
 
+from .ooxml_charts import ChartExtractor
+
 MAX_INPUT = 32 * 1024 * 1024
 MAX_STDIN = 46 * 1024 * 1024
 MAX_OUTPUT = 16 * 1024 * 1024
@@ -189,7 +191,7 @@ def _table(rows: list[list[str]], **metadata: Any) -> dict[str, Any]:
     return _block("table", "\n".join("\t".join(cell.replace("\t", " ").replace("\n", " ") for cell in row) for row in rows), metadata={"rows": rows, **metadata})
 
 
-def _docx(package: _Package) -> list[dict[str, Any]]:
+def _docx(package: _Package, charts: ChartExtractor | None = None) -> list[dict[str, Any]]:
     root = package.xml("word/document.xml")
     body = root.find(_W + "body")
     if body is None:
@@ -207,11 +209,15 @@ def _docx(package: _Package) -> list[dict[str, Any]]:
         elif item.tag == _W + "tbl":
             rows = [["\n".join(_paragraph(p) for p in cell.findall(_W + "p")) for cell in row.findall(_W + "tc")] for row in item.findall(_W + "tr")]
             blocks.append(_table(rows))
+        if charts is not None:
+            blocks.extend(charts.from_host(item, "word/document.xml"))
     return [_page(blocks)]
 
 
-def _pptx(package: _Package) -> list[dict[str, Any]]:
+def _pptx(package: _Package, charts: ChartExtractor | None = None) -> list[dict[str, Any]]:
     root = package.xml("ppt/presentation.xml")
+    if charts is not None:
+        charts.validate_host_relationships("ppt/presentation.xml")
     relationships = _relationships(package, "ppt", "ppt/_rels/presentation.xml.rels")
     slide_ids = root.findall(".//{http://schemas.openxmlformats.org/presentationml/2006/main}sldId")
     if len(slide_ids) > MAX_PAGES:
@@ -233,15 +239,19 @@ def _pptx(package: _Package) -> list[dict[str, Any]]:
         base = str(PurePosixPath(path).parent)
         rel_name = base + "/_rels/" + PurePosixPath(path).name + ".rels"
         blocks.extend(_office_images(slide, _relationships(package, base, rel_name), package))
+        if charts is not None:
+            blocks.extend(charts.from_host(slide, path))
         pages.append(_page(blocks, number))
     return pages
 
 
-def _xlsx(package: _Package) -> list[dict[str, Any]]:
+def _xlsx(package: _Package, charts: ChartExtractor | None = None) -> list[dict[str, Any]]:
     strings = []
     if "xl/sharedStrings.xml" in package.names:
         strings = ["".join(node.text or "" for node in item.iter(_S + "t")) for item in package.xml("xl/sharedStrings.xml")]
     root = package.xml("xl/workbook.xml")
+    if charts is not None:
+        charts.validate_host_relationships("xl/workbook.xml")
     relationships = _relationships(package, "xl", "xl/_rels/workbook.xml.rels")
     sheets = root.findall(".//" + _S + "sheet")
     if len(sheets) > MAX_PAGES:
@@ -255,7 +265,8 @@ def _xlsx(package: _Package) -> list[dict[str, Any]]:
         rows = []
         references = []
         row_numbers = []
-        for row in package.xml(path).iter(_S + "row"):
+        worksheet = package.xml(path)
+        for row in worksheet.iter(_S + "row"):
             values = []
             refs = []
             for cell in row.findall(_S + "c"):
@@ -294,7 +305,10 @@ def _xlsx(package: _Package) -> list[dict[str, Any]]:
             row_numbers.append(row.get("r"))
         # A worksheet is not a rendered page: retain the sheet name and source
         # cell references, while deliberately omitting a page number.
-        pages.append(_page([_table(rows, sheetName=sheet.get("name", ""), cellReferences=references, sourceRowNumbers=row_numbers, values="cached-values-no-formula-evaluation")]))
+        blocks = [_table(rows, sheetName=sheet.get("name", ""), cellReferences=references, sourceRowNumbers=row_numbers, values="cached-values-no-formula-evaluation")]
+        if charts is not None:
+            blocks.extend(charts.from_worksheet(worksheet, path, sheet.get("name", "")))
+        pages.append(_page(blocks))
     return pages
 
 
@@ -520,7 +534,11 @@ def _parse_local(document: dict[str, Any]) -> dict[str, Any]:
     if mime in office:
         package = _Package(data)
         try:
-            pages = office[mime](package)
+            if office[mime] is _odt:
+                pages = _odt(package)
+            else:
+                charts = ChartExtractor(package, _block, _relationships, LocalParseError, warnings)
+                pages = office[mime](package, charts)
         finally:
             package.close()
         warnings.append("Office layout is extracted without rendering; only PPTX slide order has known page numbers. Spreadsheet values are cached and formulas are not evaluated")

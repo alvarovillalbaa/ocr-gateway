@@ -1,6 +1,6 @@
 import {readJson,withDeadline} from './http.js';
 import {GatewayError} from './validation.js';
-import type {ParseClient,ParseRequest,ParseResult,DocumentInput} from './types.js';
+import type {ParseClient,ParseRequest,ParseResult,DocumentInput,ProviderInfo} from './types.js';
 
 export interface ClientOptions {baseUrl:string;apiKey?:string;defaults?:Partial<Omit<ParseRequest,'document'>>;fetch?:typeof fetch;timeoutMs?:number}
 export class OCRGateway implements ParseClient {
@@ -22,7 +22,7 @@ export class OCRGateway implements ParseClient {
     });
   }
   parse(request:ParseRequest,options?:{signal?:AbortSignal}):Promise<ParseResult>{return this.request('/v1/parse',{...this.options.defaults,...request},options?.signal);}
-  providers():Promise<{providers:{id:string;name:string;mimeTypes:string[];features:string[];enabled:boolean;configured:boolean}[]}>{return this.request('/v1/providers');}
+  providers():Promise<{providers:ProviderInfo[]}>{return this.request('/v1/providers');}
 }
 export async function documentFromFile(file:Blob & {name?:string}):Promise<DocumentInput>{
   if(file.size>20*1024*1024)throw new GatewayError('file_too_large','File exceeds 20 MiB');

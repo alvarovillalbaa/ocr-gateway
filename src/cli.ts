@@ -44,7 +44,7 @@ async function mcp(client:ParseClient){
     if(request.id===undefined)continue;
     const send=(data:unknown)=>process.stdout.write(`${JSON.stringify({jsonrpc:'2.0',id:request.id,...data as object})}\n`);
     try{
-      if(request.method==='initialize')send({result:{protocolVersion:'2024-11-05',capabilities:{tools:{}},serverInfo:{name:'ocr-gateway',version:'0.1.0'}}});
+      if(request.method==='initialize')send({result:{protocolVersion:'2024-11-05',capabilities:{tools:{}},serverInfo:{name:'ocr-gateway',version:'0.2.0'}}});
       else if(request.method==='ping')send({result:{}});
       else if(request.method==='tools/list')send({result:{tools:[{name:parseToolDefinition.name,description:parseToolDefinition.description,inputSchema:parseToolDefinition.parameters}]}});
       else if(request.method==='tools/call'){

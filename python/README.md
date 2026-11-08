@@ -70,7 +70,15 @@ The Node gateway opts in with `createLocalProvider()` or CLI `serve --local`. In
 
 Dependency-free formats: UTF-8 plain text, Markdown, HTML, CSV/TSV, JSON, XML, DOCX, PPTX, XLSX, and ODT. ZIP formats are extracted without office rendering. DOCX/PPTX/HTML/CSV/XLSX/ODT expose table blocks where structural tables are present. DOCX/PPTX and PDF expose bounded embedded image artifacts where available; HTML exposes supplied alt text. Only PDF pages, PPTX slide order, and multiframe image frames have known page numbers. Worksheets and flowing text deliberately omit page numbers. Spreadsheet extraction uses cached cell values, preserves sparse-cell references, and does not execute formulas. ODT repeated cell declarations are not expanded.
 
-PDF extraction requires optional PyMuPDF. Scanned PDF pages and image OCR require Pillow and the separately installed `tesseract` executable with English language data. Native PDF text retains supplied point-coordinate text bounding boxes; raster OCR returns text without fabricated boxes or confidence. PDF table cells are not reconstructed. The parser does not interpret image meaning, charts, diagrams, or equations and reports these limits in warnings. Provider-specific capabilities remain the route for visual understanding.
+The 0.2.0 parser also follows referenced native chart caches in DOCX main-body
+content, PPTX slides and XLSX worksheet drawings. It preserves titles, series,
+literal/reference caches, sparse/multilevel indices and lexical values with
+explicit cache status/source metadata. It never evaluates formulas or reads
+linked workbooks; freshness remains unverified. Typed chart text gains citations/
+chunks through the gateway. See the [native contract](../docs/native-ooxml-charts.md)
+for scope and extra budgets.
+
+PDF extraction requires optional PyMuPDF. Scanned PDF pages and image OCR require Pillow and the separately installed `tesseract` executable with English language data. Native PDF text retains supplied point-coordinate text bounding boxes; raster OCR returns text without fabricated boxes or confidence. PDF table cells are not reconstructed. The parser does not interpret rendered image/chart meaning, diagrams, or equations and reports these limits in warnings. Provider-specific capabilities remain the route for visual understanding.
 
 Run a synthetic local example without a gateway or paid call:
 

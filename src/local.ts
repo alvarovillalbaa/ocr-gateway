@@ -3,6 +3,11 @@ import type {ProviderAdapter, ProviderOutput} from './types.js';
 import {GatewayError} from './validation.js';
 
 const MAX_OUTPUT=16*1024*1024;
+const CHART_MIME_TYPES=[
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
 const MIME_TYPES=[
   'text/plain','text/markdown','text/x-markdown','text/x-rst','text/html','text/csv','application/csv','text/tab-separated-values',
   'application/json','text/json','application/xml','text/xml','application/pdf',
@@ -16,10 +21,11 @@ const MIME_TYPES=[
 export function createLocalProvider(options:{python?:string}={}):ProviderAdapter {
   return {
     id:'local', name:'Local Python extraction', mimeTypes:MIME_TYPES,
-    features:['tables','images'], requiresKey:false, supportsUrl:false,
+    features:['tables','images','charts'], featureMimeTypes:{charts:CHART_MIME_TYPES}, requiresKey:false, supportsUrl:false,
     async parse(document, context):Promise<ProviderOutput> {
       if(document.url) throw new GatewayError('local_url_unsupported','Local parsing accepts bytes/text and never fetches URLs');
       if(context.signal.aborted) throw new GatewayError('timeout','Local parsing was cancelled',408);
+      if(context.features.includes('charts')&&!CHART_MIME_TYPES.includes(document.mimeType??'')) throw new GatewayError('local_feature_unsupported','Local cached-chart extraction requires DOCX, PPTX or XLSX bytes');
       const input=JSON.stringify(document);
       if(Buffer.byteLength(input)>46*1024*1024) throw new GatewayError('input_too_large','Local input exceeds size limit',413);
       return new Promise<ProviderOutput>((resolve,reject)=>{

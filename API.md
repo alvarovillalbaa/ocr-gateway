@@ -6,6 +6,14 @@ The wire schema is [openapi.json](openapi.json); TypeScript interfaces live in [
 
 ## Parse request
 
+Provider discovery optionally returns `featureMimeTypes`, a map from declared
+features to MIME-pattern arrays. A missing entry inherits `mimeTypes`; an empty
+array permits no formats. Both the provider's feature declaration and format
+restriction must match before routing. The map cannot grant an undeclared
+feature or escape enabled/configured/key-scope restrictions. Local `charts`
+supports DOCX/PPTX/XLSX only. See the [native chart contract](docs/native-ooxml-charts.md)
+for cache metadata, provenance, limits and warnings.
+
 | Field | Default | Meaning |
 | --- | --- | --- |
 | `document` | required | Exactly one of `url`, `dataBase64`, `text`; optional `name`, `mimeType`. MIME inferred from known extension or text. |

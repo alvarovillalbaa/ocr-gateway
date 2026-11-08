@@ -16,7 +16,7 @@ export function createGatewayServer(options:ServerOptions){
     let occupied=false;
     const send=(status:number,data:unknown)=>{if(res.destroyed||res.writableEnded)return;res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(status===204?undefined:JSON.stringify(data));};
     try{
-      if(req.method==='GET'&&req.url==='/health')return send(200,{status:'ok',version:'0.1.0'});
+      if(req.method==='GET'&&req.url==='/health')return send(200,{status:'ok',version:'0.2.0'});
       const origin=req.headers.origin;if(origin){if(!options.allowedOrigins?.includes(origin))throw new GatewayError('origin_not_allowed','Origin not allowed',403);res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Authorization, Content-Type');res.setHeader('Access-Control-Allow-Methods','GET, POST, OPTIONS');}
       if(req.method==='OPTIONS')return send(204,null);
       const auth=req.headers.authorization;const policy=auth?.startsWith('Bearer ')?await options.authenticate(auth.slice(7)):undefined;

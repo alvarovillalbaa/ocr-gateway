@@ -10,6 +10,14 @@ Citations identify extraction provenance and exact text offsets in normalized pa
 
 The self-hosted server hashes scoped gateway API keys and supports revocation, rate limits, body limits, request deadlines, optional request BYOK, and explicit CORS. A gateway key grants access to a deployment; upstream accounts and credits remain necessary. The built-in file key store and rate limits target one server process.
 
+Optional provider `featureMimeTypes` intersects declared features with the
+document MIME before all routing choices. Discovery exposes that optional
+restriction. The local parser uses it for native DOCX/PPTX/XLSX chart caches;
+shared extraction preserves sparse lexical data/status/source parts under
+per-document budgets. The existing normalizer owns UTF-16 anchors and chunks.
+This adds no renderer, network lookup or formula evaluator. The
+[chart contract](native-ooxml-charts.md) defines the conditional capability.
+
 Provider-specific options are allowlisted by adapter. They cannot replace endpoint/authentication/source. Custom adapters are trusted server configuration, never HTTP-supplied code.
 
 Each React client gets a separate request/state lease. Snapshot identity hides

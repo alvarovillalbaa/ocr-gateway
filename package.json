@@ -1,6 +1,6 @@
 {
   "name": "@alvarovillalbaa/ocr-gateway",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Multi-provider document OCR gateway with citations, chunks, BYOK, routing and agent tools.",
   "type": "module",
   "license": "MIT",
