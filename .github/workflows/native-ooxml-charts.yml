@@ -2,10 +2,31 @@ name: OCR Gateway native chart candidate
 on: workflow_dispatch
 permissions:
   contents: read
+concurrency:
+  group: ocr-native-charts-20261108-1
+  cancel-in-progress: false
 jobs:
-  registration-only:
-    if: ${{ false }}
+  native-chart-candidate:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/qa/ocr-native-charts-20261108-1' &&
+      github.repository == 'alvarovillalbaa/ocr-gateway' &&
+      github.event.repository.private == false
     runs-on: ubuntu-24.04
-    timeout-minutes: 1
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      SOURCE_COMMIT: 8d85a93bd93387774a1f9654caac873b33b458a7
     steps:
-      - run: echo 'Inert registration only; no checkout or execution.'
+      - name: Record earliest owned job step
+        shell: bash
+        run: echo "OCR_CHART_JOB_STARTED_MS=$(date +%s%3N)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_COMMIT }}
+          fetch-depth: 2
+          persist-credentials: false
+          clean: false
+      - name: Installed native chart extraction and package checks
+        shell: bash
+        run: python3 -I -B -S tests/scripts/run-native-ooxml-charts.py --source-commit "$SOURCE_COMMIT"
