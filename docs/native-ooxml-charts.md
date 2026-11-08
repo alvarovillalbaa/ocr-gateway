@@ -79,3 +79,13 @@ and optional extraction dependencies are unchanged. After the
 older runner backend, the changed control uses one hash-pinned setuptools wheel
 inside an owned isolated build environment. No global tool or runtime dependency
 is upgraded.
+
+## Observed candidate
+
+The [second result](results/2026/11-08/native-ooxml-charts-attempt-2.md) retains
+45 passing installed-package cases, three installed CLI parses, a strict public
+consumer and the original failed URL-spelling observer. A separate data-only
+correction verifies those actual export URLs; application checks were not rerun.
+Both original failures remain immutable. The GitHub candidate uses the same
+retained npm/wheel bytes, with generated lock/OpenAPI adopted from that run.
+No live provider, visual accuracy or full-product acceptance is implied.

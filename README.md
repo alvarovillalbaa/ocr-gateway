@@ -6,11 +6,11 @@ Self-hosted, MIT licensed. Node.js 22+; Python 3.11+. Provider accounts and cred
 
 ## Install
 
-Install release artifacts (npm/PyPI registry publication is separate):
+Install the native-chart candidate (npm/PyPI registry publication is separate):
 
 ```bash
-npm install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.1.0/alvarovillalbaa-ocr-gateway-0.1.0.tgz
-pip install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.1.0/ocr_gateway_client-0.1.0-py3-none-any.whl
+npm install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/alvarovillalbaa-ocr-gateway-0.2.0.tgz
+pip install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/ocr_gateway_client-0.2.0-py3-none-any.whl
 ```
 
 Or build from source:
@@ -116,7 +116,7 @@ node dist/cli.js serve --local
 ```
 
 The Python package includes bounded native extraction for text, HTML, structured
-text and office XML archives. The 0.2.0 source also reads referenced native
+text and office XML archives. The 0.2.0 candidate also reads referenced native
 DOCX/PPTX/XLSX chart caches: titles, series, sparse categories/values and source
 provenance become typed chart blocks with citations/chunks. Cached values may
 be stale; workbooks/formulas are never resolved/evaluated. This does not
@@ -125,14 +125,22 @@ See the [chart contract](docs/native-ooxml-charts.md) and [Python setup](python/
 
 Request `features: ['charts']` locally only for DOCX/PPTX/XLSX. Discovery exposes
 optional `featureMimeTypes` restrictions so other local formats are rejected
-before Python startup. Original v0.1.0 archives above do not include this
-feature; the 0.2.0 candidate has a separate
-[installed-package check scope](docs/proposals/native-ooxml-chart-checks.md).
+before Python startup. The original v0.1.0 release stays available and does not
+include this feature. The candidate's
+[installed-package result](https://github.com/alvarovillalbaa/ocr-gateway/blob/main/docs/results/2026/11-08/native-ooxml-charts-attempt-2.md)
+records 45 passing authored cases, three installed CLI parses and a strict
+public-export consumer. These are synthetic source-cache checks, with no live
+OCR/model call or rendered-chart accuracy claim.
 
 The [first invocation](docs/results/2026/11-08/native-ooxml-charts-attempt-1.md)
 stopped at an incompatible preinstalled Python build backend, before build or
-tests. Cleanup passed. A changed control provisions one hash-pinned backend in
-an owned CI environment; runtime/chart acceptance remains pending.
+tests. The second run passed the application/package checks but its final
+observer compared equivalent `@`/`%40` file URLs as unequal strings. Its failed
+verdict remains intact; a separate data-only correction verifies all five actual
+installed export paths from the retained output. Both runs verified owned
+cleanup. The archives are unchanged bytes from the second run; bundled status
+documents retain that build-time snapshot. Fresh anonymous installation,
+optional PDF/image tools, live providers and full-product acceptance remain open.
 
 ## Citations, visual content and chunks
 

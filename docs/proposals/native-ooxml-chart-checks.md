@@ -94,3 +94,16 @@ dependency resolution. The runtime consumer environment stays separate. Global
 tooling, runtime dependencies, npm lock graph, parser behavior and all 45 fixtures
 remain unchanged. Run every build/package/test/CLI/consumer check afresh under
 the same 20-minute and resource limits; no functional acceptance carries forward.
+
+## Terminal evidence and observer correction
+
+The [second result](../results/2026/11-08/native-ooxml-charts-attempt-2.md)
+records all 45 authored passes, three installed CLI parses and strict public
+consumer compilation. Its final observer failed solely because Python escaped
+the package namespace's `@` as `%40` and Node preserved the literal character.
+The failed original remains unchanged. Verify the complete retained stdout in
+a separate data-only correction using strict file-URL syntax and exact decoded
+paths, without executing the application or repeating accepted checks. Preserve
+the exact tested archives for the candidate; adopt the actual generated files.
+Retire both QA controls and remove the inert default registration. No new CI
+invocation or broader acceptance is needed for this observer-only correction.

@@ -43,3 +43,14 @@ setuptools 84.2.1 wheel, hash-verified and installed only in an owned isolated
 CI build environment. Do not install wheel/packaging extras, alter global
 tooling or add runtime dependencies. Runtime consumer environment stays
 separate. Preserve first originals and run all 45 cases/build/consumers afresh.
+
+That changed control has now executed. [Result 2](docs/results/2026/11-08/native-ooxml-charts-attempt-2.md)
+preserves 45 passes, three installed CLI parses, successful strict consumer and
+the final URL-spelling observer failure. A separate data-only correction of
+the original complete output verifies the five export paths; do not rewrite
+the failed CI verdict or rerun accepted application checks. Both QA controls
+are retired and the temporary workflow registration is removed. The archived
+controller's source guards refer to its original candidate, not current main.
+The GitHub candidate must retain the exact tested archives, and generated lock/
+OpenAPI bytes come from the original CI receipt. Registry/live-provider/fresh
+anonymous installation/full-product gates remain separate.

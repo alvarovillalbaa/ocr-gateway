@@ -1,4 +1,27 @@
-# v0.1.0 verification
+# Verification
+
+## 0.2.0 native-chart candidate — 8 November 2026
+
+[Installed-package evidence](results/2026/11-08/native-ooxml-charts-attempt-2.md)
+records 27 Python and 18 Node passes, three actual installed CLI file parses,
+strict TypeScript consumption, actual npm/wheel builds and fresh package
+installations. All execution used source `18cb187c70a3f3e8ca4c622c8e4a5862484cb74d`
+on the owned public runner, with authored documents and no upstream provider.
+
+The run's original overall result remains failed: its last observer compared
+equivalent `@`/`%40` file URLs as unequal strings. A separate data-only check of
+the complete original output verifies the exact five installed export paths.
+No application checks were repeated or relabeled as a single all-green CI run.
+The earlier build-prerequisite failure remains preserved. Both owned teardowns
+passed. Actual generated OpenAPI/lock bytes were adopted without changing the
+dependency graph. The candidate archives are the unchanged retained CI bytes.
+
+Native chart caches can be stale and do not establish visual understanding.
+Live OCR/vision/model routing, optional PDF/image tools, fresh anonymous release
+installation, registry publication and full-product acceptance remain open.
+Earlier React and v0.1.0 evidence below retains its own source/profile boundary.
+
+## v0.1.0 verification
 
 Date: 2026-10-19. This is a source/SDK release with scoped local evidence. No backend test suites were run, following the user's workspace instructions. No CI workflow, hosted service, or registry release was provisioned.
 

@@ -17,3 +17,10 @@ The [first invocation](../docs/results/2026/11-08/native-ooxml-charts-attempt-1.
 stopped before all 45 cases at a build prerequisite; it supplies no functional
 pass. The changed control installs one pinned build backend in an isolated
 runner environment and executes the full new scope afresh.
+
+The [second invocation](../docs/results/2026/11-08/native-ooxml-charts-attempt-2.md)
+passed all 45 cases, three installed CLI parses and strict TypeScript consumption.
+The final export observer failed on equivalent `@`/`%40` spellings. A separate
+data-only verifier checks the retained complete output against the exact five
+installed paths. The original failed verdict remains unchanged; no functional
+checks were rerun. Temporary execution controls are retired.

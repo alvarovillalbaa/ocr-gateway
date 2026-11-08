@@ -88,6 +88,41 @@ def identity(path):
     return [value.st_dev, value.st_ino, value.st_uid, stat.S_IMODE(value.st_mode)]
 
 
+def validate_export_urls(resolution, installed_root):
+    """Validate this owned POSIX CI profile without normalizing path aliases."""
+    from urllib.parse import quote, unquote_to_bytes, urlsplit
+    import re
+
+    targets = {".": "index", "/core": "core", "/local": "local", "/server": "server", "/react": "react"}
+    if type(resolution) is not dict or set(resolution) != set(targets):
+        raise ValueError("public_export_keys")
+    if (type(installed_root) is not str or not re.fullmatch(r"/[A-Za-z0-9._@/-]+", installed_root)
+            or any(part in ("", ".", "..") for part in installed_root.split("/")[1:])):
+        raise ValueError("public_export_root")
+    paths = {}
+    for key, target in targets.items():
+        value = resolution[key]
+        if (type(value) is not str or len(value) > 8192 or not value.startswith("file:///")
+                or any(ord(char) <= 32 or ord(char) == 127 for char in value)
+                or any(char in value for char in ("\\", "?", "#"))):
+            raise ValueError("public_export_url_syntax")
+        parsed = urlsplit(value)
+        if parsed.scheme != "file" or parsed.netloc or parsed.query or parsed.fragment:
+            raise ValueError("public_export_url_components")
+        if re.search(r"%(?:2f|5c)", parsed.path, re.I) or re.search(r"%(?![0-9a-fA-F]{2})", parsed.path):
+            raise ValueError("public_export_encoded_separator_or_escape")
+        native = unquote_to_bytes(parsed.path).decode("utf-8", errors="strict")
+        expected = installed_root + "/dist/" + target + ".js"
+        if native != expected:
+            raise ValueError("public_export_origin")
+        # Python percent-encodes @; Node leaves it literal in a path. Accept
+        # those canonical spellings, while refusing escaped-unreserved aliases.
+        if parsed.path not in (quote(expected, safe="/@"), quote(expected, safe="/")):
+            raise ValueError("public_export_noncanonical_encoding")
+        paths[key] = native
+    return paths
+
+
 class Check:
     def __init__(self):
         self.checkout = Path.cwd().resolve()
@@ -793,10 +828,8 @@ void [new OCRGateway({baseUrl:'http://127.0.0.1:1'}),request,server];
         self.run("strict-installed-consumer", [self.root / "export/node_modules/.bin/tsc", "-p", self.root / "consumer/tsconfig.json"], cwd=self.root / "consumer")
         code = "console.log(JSON.stringify(Object.fromEntries(['','/core','/local','/server','/react'].map(s=>[s||'.',import.meta.resolve('@alvarovillalbaa/ocr-gateway'+s)]))))"
         resolution = json.loads(self.run("public-export-resolution", ["node", "--input-type=module", "-e", code], cwd=self.root / "consumer"))
-        for key, value in resolution.items():
-            expected = {".": "index", "/core": "core", "/local": "local", "/server": "server", "/react": "react"}[key]
-            need(value == (self.node_root / ("dist/" + expected + ".js")).as_uri(), "public_export_origin")
-        self.report["checks"]["strictConsumer"] = {"passed": True, "resolved": resolution}
+        native_paths = validate_export_urls(resolution, str(self.node_root))
+        self.report["checks"]["strictConsumer"] = {"passed": True, "resolved": resolution, "nativePaths": native_paths}
 
     def cleanup(self):
         if self.root is None:
