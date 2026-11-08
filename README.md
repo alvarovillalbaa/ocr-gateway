@@ -129,6 +129,11 @@ before Python startup. Original v0.1.0 archives above do not include this
 feature; the 0.2.0 candidate has a separate
 [installed-package check scope](docs/proposals/native-ooxml-chart-checks.md).
 
+The [first invocation](docs/results/2026/11-08/native-ooxml-charts-attempt-1.md)
+stopped at an incompatible preinstalled Python build backend, before build or
+tests. Cleanup passed. A changed control provisions one hash-pinned backend in
+an owned CI environment; runtime/chart acceptance remains pending.
+
 ## Citations, visual content and chunks
 
 Every provider result is a separate `ParsedDocument` with `pages`, typed `blocks`, `citations` and `chunks`. `primary` is the first successful selected result in routing order. Parallel OCR is retained in `results`; the gateway does not silently reconcile conflicting outputs.

@@ -35,3 +35,11 @@ install/build/environment or browser exception. Source static checks and bounded
 evidence handling only. Own/verify runner exports/dependencies/venvs, fixtures,
 keys, servers/processes and teardown. Preserve failures and retire temporary CI.
 Do not repeat the closed ten-case React packet.
+
+The [first invocation](docs/results/2026/11-08/native-ooxml-charts-attempt-1.md)
+refused actual setuptools 68.1.2 before build/tests; owned cleanup passed.
+Standing approval covers a changed second control with one exact PyPI
+setuptools 84.2.1 wheel, hash-verified and installed only in an owned isolated
+CI build environment. Do not install wheel/packaging extras, alter global
+tooling or add runtime dependencies. Runtime consumer environment stays
+separate. Preserve first originals and run all 45 cases/build/consumers afresh.

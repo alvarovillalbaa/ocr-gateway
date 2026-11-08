@@ -74,5 +74,8 @@ separate from visual understanding and optional PDF/image dependencies.
 The existing `license = "MIT"` package metadata uses an SPDX expression.
 [Setuptools documents support from version 77](https://setuptools.pypa.io/en/stable/userguide/license_migration.html),
 so 0.2.0 corrects its build minimum from 68 to 77. Python runtime requirements
-and optional extraction dependencies are unchanged. CI requires a compatible
-preinstalled toolchain and records it rather than installing build tooling.
+and optional extraction dependencies are unchanged. After the
+[first control](results/2026/11-08/native-ooxml-charts-attempt-1.md) observed an
+older runner backend, the changed control uses one hash-pinned setuptools wheel
+inside an owned isolated build environment. No global tool or runtime dependency
+is upgraded.

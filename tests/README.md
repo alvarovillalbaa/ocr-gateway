@@ -12,3 +12,8 @@ overrides keep installed execution separate from source execution, and Python
 asserts import locations. The existing ten React cases remain closed/separate.
 Fixtures are authored data: no real uploads, provider calls, model, database,
 browser or paid service. Native caches are not rendered-chart interpretation.
+
+The [first invocation](../docs/results/2026/11-08/native-ooxml-charts-attempt-1.md)
+stopped before all 45 cases at a build prerequisite; it supplies no functional
+pass. The changed control installs one pinned build backend in an isolated
+runner environment and executes the full new scope afresh.

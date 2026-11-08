@@ -4,6 +4,7 @@
 import ast
 import base64
 import ctypes
+from email.parser import BytesParser
 import gzip
 import hashlib
 import importlib.util
@@ -28,8 +29,8 @@ import zipfile
 
 
 REPOSITORY = "alvarovillalbaa/ocr-gateway"
-BRANCH = "refs/heads/qa/ocr-native-charts-20261108-1"
-BASE = "68f97a0e3ce08afb16042f6ffabaab0bc8bd9997"
+BRANCH = "refs/heads/qa/ocr-native-charts-20261108-2"
+BASE = "8d85a93bd93387774a1f9654caac873b33b458a7"
 ACTIVE = ".github/workflows/native-ooxml-charts.yml"
 INERT_SHA = "4dc2b9131619930e92ad603c52959cc6557d225ec00eca2435acd5d064ac29ab"
 CONTROLLER = "tests/scripts/run-native-ooxml-charts.py"
@@ -41,15 +42,15 @@ TEST_HASHES = {
     PY_TEST: "74a6a67e87102d95dfbaea9d5d1cac5c198e61793ccaf09c1629ff27e7f61981",
     JS_TEST: "1116bb4e7eb1d4b7153c35c00665e5b9978d07b04fe93b31d02cd6a318976c36",
 }
-ADDED = {ACTIVE, CONTROLLER, FIXTURE, PY_TEST, JS_TEST, "tests/README.md",
-         "python/ocr_gateway/ooxml_charts.py", "docs/native-ooxml-charts.md",
-         "docs/proposals/native-ooxml-chart-checks.md",
-         "docs/proposals/native-ooxml-charts.workflow.yml.example",
-         "docs/references/native-ooxml-chart-sources.md"}
-MODIFIED = {"AGENTS.md", "README.md", "PROVIDERS.md", "API.md", "docs/architecture.md",
-            "python/README.md", "package.json", "python/pyproject.toml", "src/server.ts",
-            "src/cli.ts", "python/ocr_gateway/local.py", "src/core.ts", "src/index.ts",
-            "src/types.ts", "src/local.ts", "scripts/generate-openapi.mjs"}
+PRIOR = "docs/results/2026/11-08/native-ooxml-charts-attempt-1"
+PRIOR_PINS = {".json": (21309, "c1ba8a8fc0a0e4ba94729cc4df905b44f1591127bd0ff6bfbd46c69f7375c8d4"),
+              ".log": (38713, "dfd21a63a70a2edc2e5f3ef0e335c494b8b588ac8af4804417f73203ba3c906b")}
+ADDED = {PRIOR + suffix for suffix in (".json", ".log", ".md")}
+MODIFIED = {CONTROLLER, "AGENTS.md", "README.md", "tests/README.md", "docs/proposals/native-ooxml-chart-checks.md", "docs/native-ooxml-charts.md"}
+BUILD_TOOL = {"name": "setuptools", "version": "84.2.1", "filename": "setuptools-84.2.1-py3-none-any.whl",
+              "bytes": 876263, "sha256": "ca140b45d5325a9478f880e351484f62fef15f336462e449ca0c03c873d589c2",
+              "url": "https://files.pythonhosted.org/packages/ef/55/6dc6d6bb953bdfc52519a0059592c52b6e3b8ad51cf8256dffceb55b0610/setuptools-84.2.1-py3-none-any.whl",
+              "metadataUrl": "https://pypi.org/pypi/setuptools/84.2.1/json", "requiresPython": ">=3.10"}
 PREFIX = "OCR_NATIVE_OOXML_CHARTS_RESULT="
 MIB = 1024 ** 2
 MAX_STORAGE = 1024 * MIB
@@ -164,8 +165,28 @@ class Check:
             self.index = sha((self.checkout / ".git/index").read_bytes())
             self.report.update({"sourceCommit": head, "canonicalBaseCommit": BASE, "sourceVector": vector,
                                 "inertWorkflowSha256": INERT_SHA, "indexSha256": self.index})
+            self.prior_attempt()
         else:
             need(vector == self.source and sha((self.checkout / ".git/index").read_bytes()) == self.index, "source_vector_changed")
+
+    def prior_attempt(self):
+        for suffix, (size, digest) in PRIOR_PINS.items():
+            raw = (self.checkout / (PRIOR + suffix)).read_bytes()
+            need(len(raw) == size and sha(raw) == digest, "prior_original_pin:" + suffix)
+        prior = json.loads((self.checkout / (PRIOR + ".json")).read_bytes())
+        need(prior["repository"] == REPOSITORY and prior["sourceCommit"] == BASE
+             and prior["canonicalBaseCommit"] == "68f97a0e3ce08afb16042f6ffabaab0bc8bd9997"
+             and prior["status"] == "failed" and prior["error"] == "preinstalled_setuptools_77_required"
+             and prior["checks"] == {} and prior["cleanup"]["verified"] is True
+             and prior["cleanup"]["rootAbsent"] is True and prior["cleanup"]["ownedProcessesRemaining"] == 0,
+             "prior_refusal_or_cleanup")
+        need([(row["id"], row["exitCode"]) for row in prior["commands"]] ==
+             [("node-version", 0), ("npm-version", 0), ("python-build-tooling", 0)], "prior_no_test_execution")
+        for name, row in prior["sourceVector"].items():
+            raw = self.git("show", BASE + ":" + safe_name(name))
+            need(len(raw) == row["bytes"] and sha(raw) == row["sha256"] and blob(raw) == row["blob"], "prior_source_vector:" + name)
+        self.report["priorAttempt"] = {"importedEvidenceOnly": True, "executedHere": False, "testsPreviouslyRun": 0,
+                                       "sourceCommit": BASE, "status": "failed", "pins": PRIOR_PINS, "cleanupVerified": True}
 
     def admit(self):
         need(sys.platform == "linux" and os.environ.get("CI") == "true" and os.environ.get("GITHUB_ACTIONS") == "true", "public_ci_only")
@@ -229,7 +250,7 @@ class Check:
                 if stat.S_ISLNK(value.st_mode):
                     target = os.readlink(path)
                     resolved = path.resolve()
-                    allowed_python = rel.startswith("venv/bin/python") and resolved.is_file() and str(resolved).startswith(("/usr/", "/opt/"))
+                    allowed_python = re.fullmatch(r"(?:build-venv|venv)/bin/python(?:3(?:\.\d{1,2})?)?", rel) and resolved.is_file() and str(resolved).startswith(("/usr/", "/opt/"))
                     need(resolved.is_relative_to(self.root) or allowed_python, "escaping_owned_symlink:" + rel)
                     row.update(type="symlink", target=target)
                 elif stat.S_ISDIR(value.st_mode):
@@ -489,9 +510,9 @@ class Check:
         need(re.fullmatch(r"v\d+\.\d+\.\d+", node_version) and int(node_version.split(".")[0][1:]) >= 22, "node_22_required")
         npm_version = self.run("npm-version", ["npm", "--version"]).decode().strip()
         tooling = json.loads(self.run("python-build-tooling", ["python3", "-I", "-B", "-c",
-            "import importlib.metadata,json,sys;print(json.dumps({'python':sys.version,'setuptools':importlib.metadata.version('setuptools'),'wheel':importlib.metadata.version('wheel'),'pip':importlib.metadata.version('pip')}))"]))
-        need(int(tooling["setuptools"].split(".")[0]) >= 77, "preinstalled_setuptools_77_required")
+            "import importlib.metadata,json,sys;versions={d.metadata['Name'].lower():d.version for d in importlib.metadata.distributions()};print(json.dumps(dict(python=sys.version,**{name:versions.get(name) for name in ('setuptools','wheel','pip')})))"]))
         self.report["tooling"] = dict(tooling, node=node_version, npm=npm_version)
+        self.builder()
         package = json.loads((export / "package.json").read_bytes())
         original_lock = json.loads((export / "package-lock.json").read_bytes())
         original_schema = json.loads((export / "openapi.json").read_bytes())
@@ -530,7 +551,7 @@ class Check:
         packed = json.loads(self.run("npm-pack", ["npm", "pack", "--ignore-scripts", "--json", "--pack-destination", self.root / "artifacts"]))
         need(len(packed) == 1 and packed[0]["filename"] == "alvarovillalbaa-ocr-gateway-0.2.0.tgz", "npm_archive_name")
         self.tgz = self.root / "artifacts" / packed[0]["filename"]
-        self.run("wheel-build", ["python3", "-m", "pip", "wheel", "./python", "--no-index", "--no-deps", "--no-build-isolation", "--wheel-dir", self.root / "artifacts"])
+        self.run("wheel-build", [self.build_python, "-m", "pip", "wheel", "./python", "--no-index", "--no-deps", "--no-build-isolation", "--wheel-dir", self.root / "artifacts"])
         self.wheel = self.root / "artifacts/ocr_gateway_client-0.2.0-py3-none-any.whl"
         need(self.wheel.is_file() and sorted(p.name for p in (self.root / "artifacts").iterdir()) == sorted([self.wheel.name, self.tgz.name]), "artifact_set")
         self.inspect_archives(package)
@@ -560,6 +581,80 @@ class Check:
         self.test_env = {"OCR_GATEWAY_NODE_PACKAGE_ROOT": str(self.node_root), "OCR_GATEWAY_PYTHON_PACKAGE_ROOT": str(self.site),
                          "OCR_GATEWAY_TEST_PYTHON": str(self.python), "OCR_GATEWAY_PYTHON": str(self.python)}
         self.report["checks"]["artifactInstall"] = {"passed": True, "pythonOrigins": paths, "npmRoot": str(self.node_root)}
+
+    def builder(self):
+        # Network access is confined to this fixed public wheel and the locked
+        # npm installation. The downloader is a bounded, attributed child.
+        downloader = '''import hashlib,json,pathlib,sys,urllib.request
+pin=json.loads(sys.argv[1]);directory=pathlib.Path(sys.argv[2]);directory.mkdir(mode=0o700)
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+ def redirect_request(self,*args,**kwargs):
+  raise RuntimeError('build_tool_redirect_refused')
+request=urllib.request.Request(pin['url'],headers={'Accept-Encoding':'identity','User-Agent':'OCRGateway-owned-build-tool/2'})
+opener=urllib.request.build_opener(NoRedirect(),urllib.request.ProxyHandler({}))
+with opener.open(request,timeout=15) as response:
+ if response.status!=200 or response.geturl()!=pin['url'] or response.headers.get('Content-Length')!=str(pin['bytes']):
+  raise RuntimeError('build_tool_response_identity')
+ digest=hashlib.sha256();size=0
+ with (directory/pin['filename']).open('xb') as output:
+  while True:
+   data=response.read(65536)
+   if not data:break
+   size+=len(data)
+   if size>pin['bytes']:raise RuntimeError('build_tool_size_bound')
+   digest.update(data);output.write(data)
+ if size!=pin['bytes'] or digest.hexdigest()!=pin['sha256']:raise RuntimeError('build_tool_payload_mismatch')
+ print(json.dumps({'url':response.geturl(),'filename':pin['filename'],'bytes':size,'sha256':digest.hexdigest()}))
+'''
+        fetcher = self.write("fetch-build-tool.py", downloader.encode())
+        observed = json.loads(self.run("build-tool-download", ["python3", "-I", "-B", "-S", fetcher, canonical(BUILD_TOOL).decode(), self.root / "tool-wheels"], timeout=60))
+        need(observed == {key: BUILD_TOOL[key] for key in ("url", "filename", "bytes", "sha256")}, "build_tool_download_receipt")
+        wheel = self.root / "tool-wheels" / BUILD_TOOL["filename"]
+        need([path.name for path in wheel.parent.iterdir()] == [BUILD_TOOL["filename"]]
+             and len(wheel.read_bytes()) == BUILD_TOOL["bytes"] and sha(wheel.read_bytes()) == BUILD_TOOL["sha256"], "build_tool_file_pin")
+        with zipfile.ZipFile(wheel) as archive:
+            entries = archive.infolist()
+            need(len(entries) <= 2048 and len({row.filename for row in entries}) == len(entries)
+                 and sum(row.file_size for row in entries) <= 32 * MIB, "build_tool_expansion_bound")
+            payload_manifest = {}
+            for row in entries:
+                safe_name(row.filename)
+                need(not row.flag_bits & 1 and not stat.S_ISLNK(row.external_attr >> 16), "build_tool_archive_entry")
+                if not row.is_dir():
+                    data = archive.read(row)
+                    payload_manifest[row.filename] = {"bytes": len(data), "sha256": sha(data)}
+            raw_metadata = archive.read("setuptools-84.2.1.dist-info/METADATA")
+            metadata = BytesParser().parsebytes(raw_metadata)
+            requirements = metadata.get_all("Requires-Dist", [])
+            need(metadata["Name"] == "setuptools" and metadata["Version"] == BUILD_TOOL["version"]
+                 and metadata["Requires-Python"] == BUILD_TOOL["requiresPython"]
+                 and all(";" in row and "extra ==" in row.split(";", 1)[1] for row in requirements), "build_tool_metadata_or_default_dependency")
+        self.report["buildToolDownload"] = dict(observed, metadataUrl=BUILD_TOOL["metadataUrl"],
+                metadataSha256=sha(raw_metadata), requiresPython=metadata["Requires-Python"], requirements=requirements,
+                selectedExtras=[], defaultExternalDependencies=[], payloadManifest=payload_manifest)
+        self.freeze("tool-wheels")
+        self.run("build-venv-create", ["python3", "-m", "venv", self.root / "build-venv"])
+        self.build_python = self.root / "build-venv/bin/python"
+        layout = json.loads(self.run("build-venv-layout", [self.build_python, "-I", "-B", "-c",
+            "import json,sys,sysconfig;print(json.dumps({'prefix':sys.prefix,'basePrefix':sys.base_prefix,'purelib':sysconfig.get_path('purelib')}))"]))
+        purelib = Path(layout["purelib"]).resolve()
+        need(layout["prefix"] == str(self.root / "build-venv") and layout["prefix"] != layout["basePrefix"]
+             and purelib.is_relative_to(self.root / "build-venv"), "isolated_build_layout")
+        self.run("build-tool-install", [self.build_python, "-m", "pip", "install", wheel, "--no-index", "--no-deps", "--no-compile"])
+        for name, row in payload_manifest.items():
+            if not name.endswith(".dist-info/RECORD"):
+                installed = purelib / name
+                need(installed.is_file() and not installed.is_symlink() and len(installed.read_bytes()) == row["bytes"]
+                     and sha(installed.read_bytes()) == row["sha256"], "installed_build_tool_archive_mismatch:" + name)
+        # Bind installed backend bytes before invoking/importing that backend.
+        self.freeze("build-venv")
+        query = "import importlib.metadata,json,setuptools,sys,sysconfig;print(json.dumps({'python':sys.version,'prefix':sys.prefix,'basePrefix':sys.base_prefix,'backendOrigin':setuptools.__file__,'distributions':{d.metadata['Name'].lower():d.version for d in importlib.metadata.distributions(path=[sysconfig.get_path('purelib')])}}))"
+        builder = json.loads(self.run("isolated-build-tooling", [self.build_python, "-I", "-B", "-c", query]))
+        need(builder["prefix"] == str(self.root / "build-venv") and builder["prefix"] != builder["basePrefix"]
+             and Path(builder["backendOrigin"]).resolve() == purelib / "setuptools/__init__.py"
+             and set(builder["distributions"]) == {"pip", "setuptools"}
+             and builder["distributions"]["setuptools"] == BUILD_TOOL["version"], "isolated_build_backend_identity")
+        self.report["isolatedBuildTooling"] = builder
 
     def inspect_archives(self, package):
         manifests = {}
