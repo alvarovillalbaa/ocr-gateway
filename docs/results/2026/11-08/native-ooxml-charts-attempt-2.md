@@ -67,12 +67,20 @@ run; only root version metadata and the optional feature/MIME descriptor changed
 Bundled status docs retain their build-time snapshot; current evidence is here.
 The original v0.1.0 release stays unchanged.
 
+The [publication record](native-ooxml-charts-publication.json) verifies public
+prerelease `438146413` at 09:25:47 UTC, tag/source closure `f0ef2b530083e383a895fb787991ea3c8b4323f7`,
+and all three uploaded server size/SHA-256 values, including SHA256SUMS.
+This is GitHub publication proof, without a fresh anonymous installation.
+
 Controller elapsed: 33.839 seconds. Maximum sampled owned storage: 78,464,176
 bytes; aggregate RSS: 217,808,896 bytes; owned process count: four. Cleanup
 verified 4,261 removed entries, absent owned root/processes and closed observed
 ports 36905/42913. No owned signal was required. The workflow is disabled;
 QA2 retired at `89da049ad187a537f38f0e8eff8c8318024cee79`, and the default inert
 registration was removed. The first prerequisite failure remains unchanged.
+GitHub subsequently reports workflow `411003513` deleted and zero workflows.
+Scoped source/docs whitespace passes; seven timestamp-space lines in each
+immutable original job log stay byte-exact.
 
 | Immutable original | Bytes | SHA-256 |
 | --- | ---: | --- |

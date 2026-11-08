@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocr-gateway.native-chart-candidate-publication",
+  "observedAt": "2026-11-08T09:26:13Z",
+  "executedSourceCommit": "18cb187c70a3f3e8ca4c622c8e4a5862484cb74d",
+  "sourceClosureCommit": "f0ef2b530083e383a895fb787991ea3c8b4323f7",
+  "sourceClosureTree": "eeaecc3784bf7f7fb8958801f0daf2170e9e1c18",
+  "release": {
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/alvarovillalbaa-ocr-gateway-0.2.0.tgz",
+        "digest": "sha256:4775f9503ac09d94e9c2a39ea9381c162b7f41e527c8516e1e8d381e500890d4",
+        "id": 723486035,
+        "name": "alvarovillalbaa-ocr-gateway-0.2.0.tgz",
+        "size": 83978,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/ocr_gateway_client-0.2.0-py3-none-any.whl",
+        "digest": "sha256:f7b32a418cfb3b4a872b25a582fc8941dd070dfe957f2aeb36fb936a0b996ded",
+        "id": 723486078,
+        "name": "ocr_gateway_client-0.2.0-py3-none-any.whl",
+        "size": 26079,
+        "state": "uploaded"
+      },
+      {
+        "browser_download_url": "https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/SHA256SUMS",
+        "digest": "sha256:b1347d0a3c4e1ae1dfe7d3ebcb4652f75ea5156607c0f285e05e055eece96495",
+        "id": 723486129,
+        "name": "SHA256SUMS",
+        "size": 212,
+        "state": "uploaded"
+      }
+    ],
+    "draft": false,
+    "html_url": "https://github.com/alvarovillalbaa/ocr-gateway/releases/tag/v0.2.0-native-charts.1",
+    "id": 438146413,
+    "prerelease": true,
+    "published_at": "2026-11-08T09:25:47Z",
+    "tag_name": "v0.2.0-native-charts.1",
+    "target_commitish": "f0ef2b530083e383a895fb787991ea3c8b4323f7"
+  },
+  "tag": {
+    "ref": "refs/tags/v0.2.0-native-charts.1",
+    "commit": "f0ef2b530083e383a895fb787991ea3c8b4323f7"
+  },
+  "testedArchivesUnchanged": true,
+  "generatedOutputsAdoptedFromOriginalReceipt": true,
+  "workflow": {
+    "id": 411003513,
+    "state": "deleted",
+    "remainingWorkflows": 0,
+    "qa1Retired": "712d2c319c7c69f4fc5917524b3d848cda6f0cdc",
+    "qa2Retired": "89da049ad187a537f38f0e8eff8c8318024cee79"
+  },
+  "originalCI": {
+    "run": 42466308247,
+    "job": 128686532514,
+    "status": "failed",
+    "error": "public_export_origin",
+    "authoredPasses": 45,
+    "installedCliPasses": 3,
+    "strictTypeScriptConsumerExitCode": 0,
+    "correction": "native-ooxml-charts-attempt-2-url-observation.json"
+  },
+  "limits": [
+    "GitHub server asset digests and tag/public state verified; no fresh anonymous installation",
+    "Original failed CI preserved; separate data-only URL correction",
+    "Native source caches, without visual interpretation or live provider/model acceptance",
+    "No registry publication, paid service, new account or local application execution"
+  ]
+}
