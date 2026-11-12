@@ -1,5 +1,16 @@
 # Verification
 
+## Fresh public consumers — 13 November 2026
+
+[F01–F08](results/2026/11-13/fresh-public-consumers.md) passed together at
+`1e2dcea5069dabd974d798b6f82806e7ba87a32c`: three anonymous public downloads,
+actual npm/wheel URL installations, installed Node and sync/async Python clients,
+CLI HTTP upload, MCP URL refusal and key revocation/owned cleanup. The archives,
+SDK code, versions, dependencies and generated OpenAPI remain unchanged.
+The one-profile result uses Node 24.21.0/Python 3.12.3 on Ubuntu 24.04 and is
+separate from every earlier producer or React packet. It supplies no optional
+PDF/image, real URL-provider/model, React/browser or registry acceptance.
+
 ## 0.2.0 native-chart candidate — 8 November 2026
 
 [Installed-package evidence](results/2026/11-08/native-ooxml-charts-attempt-2.md)
@@ -17,8 +28,9 @@ passed. Actual generated OpenAPI/lock bytes were adopted without changing the
 dependency graph. The candidate archives are the unchanged retained CI bytes.
 
 Native chart caches can be stale and do not establish visual understanding.
-Live OCR/vision/model routing, optional PDF/image tools, fresh anonymous release
-installation, registry publication and full-product acceptance remain open.
+Live OCR/vision/model routing, optional PDF/image tools, registry publication and
+full-product acceptance remain open. The later public consumer packet above
+closes only its recorded fresh anonymous installation/profile boundary.
 Earlier React and v0.1.0 evidence below retains its own source/profile boundary.
 
 ## v0.1.0 verification

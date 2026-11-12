@@ -1,5 +1,10 @@
 # Fresh anonymous Node and Python consumers
 
+Status: [F01–F08 accepted](../results/2026/11-13/fresh-public-consumers.md) together
+at `1e2dcea5`; no unchanged profile replay. The preparation and changed-control
+notes below retain their historical scope. Both QA refs are absent and temporary
+workflow `416686067` is disabled.
+
 Prepared 13 November 2026 under the standing portfolio approval. The current
 public candidate is `v0.2.0-native-charts.1`, release `438146413`; its three assets
 have been read back from GitHub. This scope qualifies delivery of those exact

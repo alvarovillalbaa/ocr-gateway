@@ -1,4 +1,4 @@
-# Inactive example; a separate reviewed QA branch pins the immutable source.
+# Retired example. Workflow 416686067 is disabled and both exact QA refs are absent.
 name: Temporary fresh anonymous OCR consumers
 on:
   create:

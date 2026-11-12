@@ -1,5 +1,15 @@
 # Focused native chart checks
 
+The separate [fresh public consumer scope](../docs/proposals/fresh-public-consumers.md)
+now has [eight accepted delivery identities](../docs/results/2026/11-13/fresh-public-consumers.md).
+Its `tests/smoke/fresh-public-*` programs import only the installed public
+archives and use authored T2 HTML/text. The CI-only controller is
+`tests/scripts/run-fresh-public-consumers.py`; runtime tripwires live in
+`tests/helpers/fresh-consumer-*`. This did not rebuild archives or repeat the
+45 native-chart cases below, three OOXML CLI cases or ten React cases. Keep the
+first failed invocation and missing-receipt/cleanup limits. Do not replay this
+accepted profile unchanged.
+
 `integration/test_native_ooxml_charts.py`: 27 authored Python cases against
 the actual local ZIP/XML parser. `integration/native-ooxml-charts.test.mjs`:
 18 Node cases through real local subprocesses, normalization/routing and an

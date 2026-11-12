@@ -13,6 +13,12 @@ npm install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.
 pip install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/ocr_gateway_client-0.2.0-py3-none-any.whl
 ```
 
+These public URLs were installed into fresh npm/Python consumers on Ubuntu
+24.04, Node 24.21.0 and Python 3.12.3. The [eight delivery checks](docs/results/2026/11-13/fresh-public-consumers.md)
+verify anonymous downloads, installed SDK/CLI use, sync/async Python uploads,
+MCP's local-URL refusal and scoped-key revocation. The archives retain their
+original bytes; npm/PyPI registry publication remains separate.
+
 Or build from source:
 
 ```bash
@@ -139,8 +145,10 @@ observer compared equivalent `@`/`%40` file URLs as unequal strings. Its failed
 verdict remains intact; a separate data-only correction verifies all five actual
 installed export paths from the retained output. Both runs verified owned
 cleanup. The archives are unchanged bytes from the second run; bundled status
-documents retain that build-time snapshot. Fresh anonymous installation,
-optional PDF/image tools, live providers and full-product acceptance remain open.
+documents retain that build-time snapshot. The later
+[fresh public consumer profile](docs/results/2026/11-13/fresh-public-consumers.md)
+passes independently. Optional PDF/image tools, live providers, other fresh
+runtime profiles and full-product acceptance remain open.
 
 ## Citations, visual content and chunks
 

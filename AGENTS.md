@@ -69,3 +69,9 @@ do not invent a positive URL-capable provider. Preserve every failed receipt,
 verify installed bytes and owned teardown, then retire the temporary CI/ref.
 Storage Guard on 13 November reports 3.7 GiB free/38.0 GiB required. No local
 application/parser/test/CLI/installation/build/environment/browser execution.
+
+The [public consumer result](docs/results/2026/11-13/fresh-public-consumers.md)
+now accepts F01–F08 together at `1e2dcea5`. Do not repeat this closed profile
+unchanged. Preserve the first failed invocation and its missing buffered receipt/
+unverified cleanup. All release/tag/archive bytes and production SDK inputs stay
+unchanged. Runtime URL refusal is not positive URL/provider or React proof.

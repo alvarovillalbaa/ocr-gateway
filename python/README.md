@@ -10,6 +10,17 @@ pip install './python[local]'
 
 After registry publication the equivalent install is `pip install ocr-gateway-client`. Registry publication is separate from creating the GitHub repository.
 
+The current public 0.2.0 wheel can also be installed directly:
+
+```sh
+python3 -m pip install https://github.com/alvarovillalbaa/ocr-gateway/releases/download/v0.2.0-native-charts.1/ocr_gateway_client-0.2.0-py3-none-any.whl
+```
+
+The [fresh public consumer result](../docs/results/2026/11-13/fresh-public-consumers.md)
+records a real URL installation into a new Python 3.12.3 venv, matching wheel
+payload/import origin, sync/async file calls to the installed local gateway and
+Unicode citation checks. No optional local extras or provider call was needed.
+
 ```python
 from ocr_gateway import OCRGateway, utf16_slice
 
