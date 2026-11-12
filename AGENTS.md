@@ -54,3 +54,18 @@ controller's source guards refer to its original candidate, not current main.
 The GitHub candidate must retain the exact tested archives, and generated lock/
 OpenAPI bytes come from the original CI receipt. Registry/live-provider/fresh
 anonymous installation/full-product gates remain separate.
+
+## Fresh public consumer scope — 13 November 2026
+
+The standing portfolio approval also covers `docs/proposals/fresh-public-consumers.md`:
+one temporary free public Ubuntu job capped at 20 minutes. Download/install the
+unchanged public 0.2.0 Node/Python artifacts anonymously; execute only the new
+installed-consumer identities with authored HTML/text and an owned loopback CLI
+gateway. No rebuild/version/lock/OpenAPI/archive/registry/provider/Auth-policy
+change, paid call or new account. Keep HOME intact and use owned caches/stores.
+Do not repeat the closed 45 native-chart cases, three OOXML CLI cases, strict
+source consumer or ten React cases. URL tools/MCP must refuse local URL parsing;
+do not invent a positive URL-capable provider. Preserve every failed receipt,
+verify installed bytes and owned teardown, then retire the temporary CI/ref.
+Storage Guard on 13 November reports 3.7 GiB free/38.0 GiB required. No local
+application/parser/test/CLI/installation/build/environment/browser execution.

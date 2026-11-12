@@ -1,0 +1,26 @@
+# Inactive example; a separate reviewed QA branch pins the immutable source.
+name: Temporary fresh anonymous OCR consumers
+on:
+  create:
+permissions:
+  contents: read
+jobs:
+  public-consumers:
+    if: github.repository == 'alvarovillalbaa/ocr-gateway' && github.event.repository.private == false && github.event.ref_type == 'branch' && github.event.ref == 'qa/ocr-public-consumer-20261113-1' && github.ref == 'refs/heads/qa/ocr-public-consumer-20261113-1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SOURCE_COMMIT: APPROVED_SOURCE_COMMIT
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_COMMIT }}
+          persist-credentials: false
+          fetch-depth: 1
+          clean: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Download install and consume the unchanged public release
+        run: python3 tests/scripts/run-fresh-public-consumers.py
