@@ -24,7 +24,7 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 import zipfile
 
 REPO = 'alvarovillalbaa/ocr-gateway'
-BRANCH = 'qa/ocr-public-consumer-20261113-1'
+BRANCH = 'qa/ocr-public-consumer-20261113-2'
 TAG = 'v0.2.0-native-charts.1'
 BASE = 'https://github.com/' + REPO + '/releases/download/' + TAG + '/'
 ASSETS = {
@@ -42,6 +42,7 @@ report = {'schemaVersion': 1, 'repository': REPO, 'sourceCommit': source, 'start
 root = None
 server = None
 groups = []
+baseline = {}
 deadline = time.monotonic() + 1050
 key = None
 server_out = server_err = None
@@ -223,6 +224,8 @@ def owned_descendants():
             fields = (entry / 'stat').read_text().rpartition(') ')[2].split()
             if fields[0] == 'Z' or entry.stat().st_uid != os.getuid():
                 continue
+            if baseline.get(entry.name) == fields[19]:
+                continue  # Pre-existing runner services are not this task's children.
             argv = (entry / 'cmdline').read_bytes().split(b'\0')
             environ = (entry / 'environ').read_bytes().split(b'\0')
             cwd = os.fsencode(os.readlink(entry / 'cwd'))
@@ -230,6 +233,8 @@ def owned_descendants():
                 found.append({'pid': int(entry.name), 'pgid': int(fields[2]), 'startTime': fields[19]})
         except (FileNotFoundError, ProcessLookupError):
             pass
+        except PermissionError:
+            found.append({'pid': int(entry.name), 'inspectionDenied': True})
     return found
 
 
@@ -248,6 +253,15 @@ try:
     nonce = secrets.token_hex(16)
     (root / '.owner').write_text(nonce)
     report['ownedRoot'] = {'path': str(root), 'identity': list(root_identity), 'nonce': nonce}
+    for entry in Path('/proc').iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            if entry.stat().st_uid == os.getuid():
+                baseline[entry.name] = (entry / 'stat').read_text().rpartition(') ')[2].split()[19]
+        except (FileNotFoundError, ProcessLookupError):
+            pass
+    report['preExistingProcessCount'] = len(baseline)
     consumer, artifacts, guards = root / 'consumer', root / 'artifacts', root / 'guards'
     for p in (consumer, artifacts, guards, root / 'npm-cache', root / 'cache', root / 'config'):
         p.mkdir(mode=0o700)
@@ -379,24 +393,36 @@ except BaseException as error:
     report['failure'] = {'type': type(error).__name__, 'message': str(error), 'traceback': traceback.format_exc()}
 finally:
     if root is not None:
-        report['cleanup']['groups'] = [{'pid': process.pid, 'liveAbsent': stop(process)} for process in reversed(groups)]
-        if server_out:
-            server_out.close()
-            server_err.close()
-            report['server'] = {'stdout': capture((root / 'server.out').read_bytes()), 'stderr': capture((root / 'server.err').read_bytes())}
-        remaining = owned_descendants()
-        report['cleanup']['ownedDescendants'] = remaining
-        connection = socket.socket()
+        report['cleanup']['groups'] = []
+        for process in reversed(groups):
+            try:
+                closed = stop(process)
+                report['cleanup']['groups'].append({'pid': process.pid, 'liveAbsent': closed})
+                if not closed:
+                    status = 1
+            except BaseException:
+                report['cleanup']['groups'].append({'pid': process.pid, 'liveAbsent': False, 'error': traceback.format_exc()})
+                status = 1
         try:
-            report['cleanup']['portClosed'] = connection.connect_ex(('127.0.0.1', PORT)) != 0
-        finally:
-            connection.close()
-        if remaining or any(not group['liveAbsent'] for group in report['cleanup']['groups']) or not report['cleanup']['portClosed']:
-            status = 1
-        try:
+            if server_out:
+                server_out.close()
+                server_err.close()
+                report['server'] = {'stdout': capture((root / 'server.out').read_bytes()), 'stderr': capture((root / 'server.err').read_bytes())}
+            remaining = owned_descendants()
+            report['cleanup']['ownedDescendants'] = remaining
+            connection = socket.socket()
+            try:
+                report['cleanup']['portClosed'] = connection.connect_ex(('127.0.0.1', PORT)) != 0
+            finally:
+                connection.close()
+            if remaining or not report['cleanup']['portClosed']:
+                status = 1
+            if (root / 'network.jsonl').exists():
+                report['network'] = [json.loads(line) for line in (root / 'network.jsonl').read_text().splitlines()]
             guard('after-owned-shutdown')
             need((root.stat().st_dev, root.stat().st_ino, root.stat().st_uid) == root_identity and (root / '.owner').read_text() == nonce, 'Root ownership changed')
             need(not remaining, 'Owned descendants remain; scratch removal refused')
+            need(all(group['liveAbsent'] for group in report['cleanup']['groups']), 'Direct group remains; scratch removal refused')
             shutil.rmtree(root)
             report['cleanup']['rootAbsent'] = not root.exists()
         except BaseException:

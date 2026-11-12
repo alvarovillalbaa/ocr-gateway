@@ -38,7 +38,9 @@ if (action === 'inventory') {
   const client = new OCRGateway({baseUrl, apiKey: process.env.OCR_GATEWAY_API_KEY, timeoutMs: 15_000});
   const discovery = await client.providers();
   assert.deepEqual(discovery.providers.map(p => p.id), ['local']);
-  assert.equal(discovery.providers[0].supportsUrl, false);
+  assert.equal(discovery.providers[0].enabled, true);
+  assert.equal(discovery.providers[0].configured, true);
+  assert.ok(discovery.providers[0].mimeTypes.includes('text/html'));
   const result = verify(await client.parse({document: {name: 'fresh.html', mimeType: 'text/html', text: await readFile(process.env.FRESH_HTML, 'utf8')}, providers: ['local'], mode: 'single'}));
   await assert.rejects(new OCRGateway({baseUrl, timeoutMs: 5000}).providers(), error => error instanceof GatewayError && error.code === 'unauthorized' && error.status === 401);
   const tool = createParseTool(client, {providers: ['local'], mode: 'single'});

@@ -51,3 +51,11 @@ and after. Never retain the one-time bearer: its create output gets an explicit
 redaction plus original byte count/digest. No credential or store is committed.
 Record failures without rewriting verdicts; repair only the failed/new scope.
 Local work remains source/static/evidence only after the 3.7/38 GiB refusal.
+
+The [first invocation](../results/2026/11-13/fresh-public-consumers-attempt-1.md)
+failed at its Node transport command, then lost the buffered receipt to a
+pre-existing-process inspection denial. The changed second control retains
+failure evidence unconditionally, excludes baseline PID/start identities from
+task inspection and checks discovery's actual enabled/configured/MIME fields.
+The original transport exception is unobserved. No complete profile or old
+functional case is carried; run all eight new delivery identities afresh.
