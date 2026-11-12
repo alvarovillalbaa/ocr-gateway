@@ -254,7 +254,7 @@ try:
     (root / 'npmrc').write_text('')
     (root / 'npm-global').write_text('')
     (consumer / 'package.json').write_text(json.dumps({'name': 'ocr-public-consumer', 'version': '0.0.0', 'private': True, 'type': 'module'}))
-    bootstrap = {k: os.environ[k] for k in ('PATH', 'RUNNER_TEMP')}
+    bootstrap = {k: os.environ[k] for k in ('PATH', 'RUNNER_TEMP', 'HOME')}
     bootstrap.update({'CI': 'true', 'LANG': 'C.UTF-8', 'TZ': 'UTC', 'NO_COLOR': '1', 'PYTHONDONTWRITEBYTECODE': '1',
                       'npm_config_cache': str(root / 'npm-cache'), 'npm_config_userconfig': str(root / 'npmrc'), 'npm_config_globalconfig': str(root / 'npm-global'),
                       'npm_config_update_notifier': 'false', 'PIP_CONFIG_FILE': '/dev/null', 'PIP_DISABLE_PIP_VERSION_CHECK': '1',
