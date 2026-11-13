@@ -1,5 +1,16 @@
 # Focused native chart checks
 
+The separate [optional PDF scope](../docs/proposals/optional-pdf-consumers.md)
+now has [four distinct accepted identities](../docs/results/2026/11-13/optional-pdf-consumers.md)
+across two invocations. Its `optional-pdf-*` consumers use independently
+authored tiny PDF syntax and unchanged installed public packages with real
+PyMuPDF1.26.6. P01 passed first; P02's wrong four-block observer failed. The
+changed check qualifies six exact content/gap citations and no gap boxes, then
+P02/P03/P04 passed. P01 was carried with exact identity checks and never rerun.
+Thirty streams/nine source guards and both owned teardowns are retained; both
+temporary controls are retired. This is native-text PDF evidence, not scanned
+OCR quality, arbitrary-PDF safety or a single all-green four-case invocation.
+
 The separate [fresh public consumer scope](../docs/proposals/fresh-public-consumers.md)
 now has [eight accepted delivery identities](../docs/results/2026/11-13/fresh-public-consumers.md).
 Its `tests/smoke/fresh-public-*` programs import only the installed public

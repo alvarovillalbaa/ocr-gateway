@@ -21,6 +21,13 @@ records a real URL installation into a new Python 3.12.3 venv, matching wheel
 payload/import origin, sync/async file calls to the installed local gateway and
 Unicode citation checks. No optional local extras or provider call was needed.
 
+The separate [optional PDF result](../docs/results/2026/11-13/optional-pdf-consumers.md)
+qualifies native PDF text, actual page/point geometry and installed Node
+integration using this unchanged0.2.0 wheel with PyMuPDF1.26.6 on Python3.12.3.
+Four authored identities span two invocations; the first failed observer and
+all originals remain. Blank-page warnings and malformed-file refusal passed;
+scanned/image OCR and arbitrary-PDF safety remain unqualified.
+
 ```python
 from ocr_gateway import OCRGateway, utf16_slice
 

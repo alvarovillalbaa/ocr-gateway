@@ -103,3 +103,12 @@ P02/P03/P04. Parent32e8994c, five reviewed source/instruction modifications and
 three result files only. First control disabled/ref deleted/read back. New
 exact QA2/path and all unchanged bounds are in the proposal. No product fix,
 rebuild, release replacement, old-case replay or single four-pass claim.
+
+The [completed optional-PDF qualification](docs/results/2026/11-13/optional-pdf-consumers.md)
+accepts P01 at32e8994c and P02/P03/P04 at3c485202, with no P01 replay. The
+second job passed; first failure remains false. Thirty original streams, both
+complete source vectors/nine guards, exact anchors/geometry/refusals and owned
+cleanup verify in the data-only audit. Both temporary workflows are disabled
+and their exact QA refs deleted/read back empty. Product/release bytes remain
+unchanged. This scope is closed; no routine replay. Native-text PDF evidence
+does not qualify scanned/image OCR, arbitrary-PDF safety or full-product scope.

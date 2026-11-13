@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-11-13",
+  "repository": "alvarovillalbaa/ocr-gateway",
+  "attempts": [
+    {"run": 43398625299, "job": 131795605410, "conclusion": "failure", "workflow": 417076693, "path": ".github/workflows/optional-pdf-consumers.yml", "workflowReadback": "disabled_manually", "qaRef": "refs/heads/qa/ocr-optional-pdf-20261113-1", "shaVerifiedBeforeDeletion": "5be9c62c810c76b09ef75b83f877f9423d6b9050", "deleteExit": 0, "matchingRefsReadback": []},
+    {"run": 43399538275, "job": 131798656441, "conclusion": "success", "workflow": 417082260, "path": ".github/workflows/optional-pdf-consumers-2.yml", "workflowReadback": "disabled_manually", "qaRef": "refs/heads/qa/ocr-optional-pdf-20261113-2", "shaVerifiedBeforeDeletion": "d2f5c597ad7bb32e58f5a8ef26b6ab81b224c8aa", "deleteExit": 0, "matchingRefsReadback": []}
+  ],
+  "originalsRetainedBeforeRetirement": true,
+  "distinctAcceptedChecks": {"firstInvocation": ["P01"], "secondInvocation": ["P02", "P03", "P04"]},
+  "passedP01Replayed": false,
+  "firstFailedVerdictChanged": false,
+  "singleFourCasePassClaim": false,
+  "localTransferCleanup": {"files": 2, "bytes": 259172, "canonicalZipByteEquality": true, "regularNonSymlinkLeaves": true, "uidDeviceInodeModeHashRechecked": true, "nativeLsofExit": 1, "nativeLsofOutputBytes": 0, "onlyOwnedDuplicatesRemoved": true, "rootAbsenceReadBack": true},
+  "canonicalZipAndRawJsonOriginalsPreserved": true,
+  "productOrReleaseArchiveBytesChanged": false,
+  "otherRepositoryWorkflowsOrRefsChanged": false,
+  "portfolioGoalComplete": false
+}

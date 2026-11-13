@@ -1,3 +1,4 @@
+# Retired example: workflows417076693/417082260 disabled; both exact QA refs absent.
 name: Temporary installed optional PDF consumers
 on:
   create:

@@ -1,8 +1,9 @@
 # Four installed optional-PDF checks
 
 13 November 2026. State at preparation: **UNRUN**. The [first actual invocation](../results/2026/11-13/optional-pdf-consumers-attempt-1.md)
-failed at P02 after P01 passed; P03/P04 remain unrun. The changed second control
-below carries P01 and executes only the unfinished three identities.
+failed at P02 after P01 passed. The [second actual result](../results/2026/11-13/optional-pdf-consumers.md)
+now accepts P02/P03/P04 while carrying P01 without replay. Both original
+receipts and retired controls remain explicit; this preparation scope is closed.
 The last public-consumer scope is closed.
 This separate Tier 2 packet addresses the existing optional PDF parser using
 only independently authored small PDF bytes and the unchanged released 0.2.0

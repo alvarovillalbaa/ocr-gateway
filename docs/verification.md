@@ -1,5 +1,18 @@
 # Verification
 
+## Optional native PDF — 13 November 2026
+
+[P01–P04](results/2026/11-13/optional-pdf-consumers.md) qualify four distinct
+authored PDF identities across two invocations. Installed Python/PyMuPDF1.26.6
+native extraction passed P01 at32e8994c. Changed observer source3c485202 passed
+P02/P03/P04: installed Node citations/chunks, empty-page warning and actual
+malformed exit1. The first four-block expectation failure stays false; P01 was
+carried through exact original/source/runtime/archive/fixture checks, not rerun.
+Thirty original streams and both owned cleanups were independently audited.
+Product/release bytes stay unchanged. Both temporary workflows/refs retired.
+No single four-case execution, scanned/image OCR, arbitrary-PDF security,
+live provider, registry or full-product acceptance is implied.
+
 ## Fresh public consumers — 13 November 2026
 
 [F01–F08](results/2026/11-13/fresh-public-consumers.md) passed together at
@@ -28,9 +41,9 @@ passed. Actual generated OpenAPI/lock bytes were adopted without changing the
 dependency graph. The candidate archives are the unchanged retained CI bytes.
 
 Native chart caches can be stale and do not establish visual understanding.
-Live OCR/vision/model routing, optional PDF/image tools, registry publication and
-full-product acceptance remain open. The later public consumer packet above
-closes only its recorded fresh anonymous installation/profile boundary.
+Live OCR/vision/model routing, optional scanned/image tools, registry publication
+and full-product acceptance remain open. The later optional native-PDF and
+public-consumer packets above close only their recorded profiles/boundaries.
 Earlier React and v0.1.0 evidence below retains its own source/profile boundary.
 
 ## v0.1.0 verification

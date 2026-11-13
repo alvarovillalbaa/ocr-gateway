@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocr.optional-pdf-original-receipt-audit",
+  "passed": true,
+  "dataOnly": true,
+  "verifierSha256": "31a4be6fe24d2caba5fe94337502a6d43e5f69b0507ec186c22a497d0e2c2440",
+  "parserOrFixtureReexecuted": false,
+  "distinctAcceptedIdentities": [
+    "P01",
+    "P02",
+    "P03",
+    "P04"
+  ],
+  "newIdentitiesByAttempt": {
+    "1": [
+      "P01"
+    ],
+    "2": [
+      "P02",
+      "P03",
+      "P04"
+    ]
+  },
+  "firstOverallFailurePreserved": true,
+  "singleFourCasePassingInvocation": false,
+  "completeOriginalStreams": 30,
+  "sourceGuards": 9,
+  "cases": {
+    "P01": "exact native two-page text and real point geometry",
+    "P02": "six exact UTF-16 citations/content/gap provenance and chunks",
+    "P03": "blank page and missing OCR warning",
+    "P04": "actual expected exit1, empty stdout and generic error"
+  },
+  "sameInstalledNodePayload": true,
+  "sameInstalledPythonPdfModules": 112,
+  "fixtures": {
+    "blank.pdf": {
+      "bytes": 549,
+      "sha256": "ff04e63547c4350a8ec2673942eeb9675b57491bb2c7e494d86a71b25c25e592"
+    },
+    "invalid.pdf": {
+      "bytes": 55,
+      "sha256": "bdd09de62e0eff2ca97558adbaa1e2375c214ea64d226fb3b83b7f125864735d"
+    },
+    "two-pages.pdf": {
+      "bytes": 1024,
+      "sha256": "6453b4551987805ccbda212af1cf9936960d13fa2b4de4b4afeb9999dd20d854"
+    }
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "sourceCommit": "32e8994c615645591755c642c0a05e1338de1a63",
+      "sourceFiles": 82,
+      "originalReceiptBytes": 413534,
+      "originalReceiptSha256": "30e20b848d610c8bb0e274c84c1932b5f957302221850def6311135b8c9f8d8f",
+      "commands": 7,
+      "completeStreams": 14,
+      "exitCodes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sourceGuards": 4,
+      "ownedCleanup": {
+        "rootAbsent": true,
+        "leaves": 1245,
+        "bytes": 126785511,
+        "vectorSha256": "c200f3cf6bb762d5f06a22d20a4e6ad789a966f759b8b209a75a37d4a4b9f77e"
+      }
+    },
+    {
+      "attempt": 2,
+      "sourceCommit": "3c485202f50f20878e296ddbe10f757cc476267b",
+      "sourceFiles": 85,
+      "originalReceiptBytes": 420031,
+      "originalReceiptSha256": "cae18c169456008f56fa88b086667652f2e2661fc554daa61be3066954c448b6",
+      "commands": 8,
+      "completeStreams": 16,
+      "exitCodes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "sourceGuards": 5,
+      "ownedCleanup": {
+        "rootAbsent": true,
+        "leaves": 1247,
+        "bytes": 126788665,
+        "vectorSha256": "48aa156364f1a0ced1fd51aa796edde0515eae80e554efb5a0cf7529f173d532"
+      }
+    }
+  ],
+  "limits": [
+    "Original-output arithmetic/hash audit, not new parser execution or independent host attestation.",
+    "Runtime/profile and authored ASCII PDFs are narrow; no scanned/image OCR quality or arbitrary-PDF security result.",
+    "Owned process samples/teardown observations are not every descendant lifetime or whole-host disposal.",
+    "No live provider/model, browser, hosted server, registry or full-product acceptance."
+  ]
+}

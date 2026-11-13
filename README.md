@@ -147,8 +147,12 @@ installed export paths from the retained output. Both runs verified owned
 cleanup. The archives are unchanged bytes from the second run; bundled status
 documents retain that build-time snapshot. The later
 [fresh public consumer profile](docs/results/2026/11-13/fresh-public-consumers.md)
-passes independently. Optional PDF/image tools, live providers, other fresh
-runtime profiles and full-product acceptance remain open.
+passes independently. The separate [optional PDF qualification](docs/results/2026/11-13/optional-pdf-consumers.md)
+accepts four authored identities across two invocations on installed0.2.0 with
+real PyMuPDF1.26.6: native text/page geometry, Node citations/chunks, blank-page
+warnings and malformed refusal. The first observer failure remains preserved;
+no passed case was replayed. Scanned/image OCR, live providers, other runtime
+profiles and full-product acceptance remain open.
 
 ## Citations, visual content and chunks
 
