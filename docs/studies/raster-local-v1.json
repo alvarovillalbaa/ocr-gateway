@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "study_id": "installed-raster-local-v1",
+  "state_at_freeze": "unrun",
+  "purpose": "Qualify actual image/scanned-PDF local OCR and installed SDK/CLI provenance on authored fixtures; not an OCR accuracy benchmark.",
+  "parent": "e59ac9215e218fb9f6e2c98e4486a7d2da22dc92",
+  "runtime": {"ubuntu": "24.04", "architecture": "amd64", "python_minor": "3.12", "node": "24.21.0"},
+  "apt": {
+    "archive": "https://archive.ubuntu.com/ubuntu",
+    "suite": "noble",
+    "components": ["main", "universe"],
+    "signed_by": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+    "private_configuration_state_cache_and_logs": true,
+    "global_hooks_or_installs": false,
+    "packages": [
+      {"name": "tesseract-ocr", "version": "5.3.4-1build5", "architecture": "amd64"},
+      {"name": "libtesseract5", "version": "5.3.4-1build5", "architecture": "amd64"},
+      {"name": "liblept5", "version": "1.82.0-3build4", "architecture": "amd64"},
+      {"name": "tesseract-ocr-eng", "version": "1:4.1.0-2", "architecture": "all"},
+      {"name": "tesseract-ocr-osd", "version": "1:4.1.0-2", "architecture": "all"}
+    ],
+    "identity_policy": "Resolve only these exact versions from authenticated signed indexes, verify every package size/SHA256, extract without maintainer scripts into the owned root; freeze binary/library/model hashes before recognition. Package SHA256 values are observed from signed indexes, not claimed predeclared."
+  },
+  "pillow": {
+    "version": "13.0.0",
+    "metadata_url": "https://pypi.org/pypi/Pillow/13.0.0/json",
+    "filename": "pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+    "sha256": "42d63be3af4f9b951b199b0a9d23365d37ab14687e6d77b74940432c8515c4ca",
+    "max_bytes": 8388608
+  },
+  "pymupdf": {"version": "1.26.6", "bytes": 24115381, "sha256": "7777d0b7124c2ebc94849536b6a1fb85d158df3b9d873935e63036559391534c"},
+  "fixtures": {
+    "width": 1200,
+    "height": 400,
+    "font": "Pillow13.0.0 bundled default Aileron",
+    "font_size": 48,
+    "line_positions": [[50, 60], [50, 150]],
+    "background": "white",
+    "foreground": "black",
+    "dpi": 300,
+    "first_lines": ["RIVER CARGO", "ACCOUNT SEVEN"],
+    "second_lines": ["COPPER WAREHOUSE", "ACCOUNT NINE"],
+    "formats": ["png", "two-frame-uncompressed-tiff", "image-only-flate-pdf", "authored-invalid-png"],
+    "pdf_page_points": [600, 200],
+    "pdf_native_text_required_empty": true,
+    "comparison": "Whitespace-split words must equal the exact authored uppercase words in order; preserve original OCR text. No case folding, fuzzy matching or outcome-based font/task changes."
+  },
+  "cases": [
+    {"id": "R01", "boundary": "installed Python parser with actual Tesseract, two TIFF frames", "requires": "both exact word sequences, dimensions, frame page1/2, no invented box/confidence, no single-image artifact"},
+    {"id": "R02", "boundary": "installed Node SDK local provider, authored PNG", "requires": "exact words, no document page number, real pixel dimensions, exact original image artifact, UTF16 citations/chunks, no invented box/confidence"},
+    {"id": "R03", "boundary": "installed Node file CLI local provider, image-only PDF", "requires": "actual raster OCR exact words, real PDF page1/point dimensions, raster provenance and embedded-image artifact, exact citations/chunks, no invented OCR box/confidence"},
+    {"id": "R04", "boundary": "installed Python CLI, invalid PNG", "requires": "actual exit1, empty stdout, generic LOCAL_PARSE_ERROR, no authored document marker echo"}
+  ],
+  "execution": {"free_public_ci_minutes": 20, "global_work_seconds": 900, "local_execution": false, "real_tesseract_model_execution": true, "hosted_provider_or_model_api": false, "private_input": false, "paid_service": false, "closed_cases_replayed": false},
+  "acceptance": {"all_four_required": true, "all_original_streams_required": true, "source_installed_input_guards_required": true, "owned_cleanup_required": true, "general_ocr_quality_or_arbitrary_file_security_claim": false}
+}

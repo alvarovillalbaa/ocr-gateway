@@ -112,3 +112,24 @@ cleanup verify in the data-only audit. Both temporary workflows are disabled
 and their exact QA refs deleted/read back empty. Product/release bytes remain
 unchanged. This scope is closed; no routine replay. Native-text PDF evidence
 does not qualify scanned/image OCR, arbitrary-PDF safety or full-product scope.
+
+## Installed raster OCR — 13 November 2026
+
+Standing all-work approval covers the new exact
+[raster packet](docs/proposals/raster-local-v1.md) and immutable protocol:
+four authored integration identities, unchanged public0.2.0 archives, private
+Pillow/PyMuPDF and actual Tesseract/English traineddata recognition in one free
+public Ubuntu job capped20min. Parent e59ac921, seven additions and append-only
+AGENTS/tests README only. No closed case replay or product/release/lock change.
+Native versions/publisher policy are fixed; actual package checksums come from
+authenticated private APT indexes and binary/model hashes freeze before OCR.
+No sudo, global APT mutation, maintainer script, paid/hosted model API, account,
+key, database, browser or local heavy exception. Read the precise private APT,
+source/install/input/model/process/original-stream/teardown boundaries before
+execution. Local StorageGuard5.1/34GiB still fails. Preserve every failure;
+retire only the exact temporary control after terminal originals. Simple fixed
+English fixtures do not establish general OCR quality, arbitrary-file safety,
+strict native-engine network confinement or full-product acceptance.
+Originals cover supervisor streams/application OCR text; the unchanged product
+suppresses native engine diagnostics and trims output-file edges. State that
+limit explicitly; never claim a complete native-engine transcript.

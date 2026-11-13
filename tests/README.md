@@ -45,3 +45,17 @@ The final export observer failed on equivalent `@`/`%40` spellings. A separate
 data-only verifier checks the retained complete output against the exact five
 installed paths. The original failed verdict remains unchanged; no functional
 checks were rerun. Temporary execution controls are retired.
+
+## New raster integration qualification
+
+`integration/raster-local-python.py` and `integration/raster-local-node.mjs`
+are new Tier2 installed-consumer integration entries; they use no database,
+private data, model API or fabricated provider response. The separate helper
+`helpers/raster_fixtures.py` independently writes authored raster/image-only
+PDF bytes; it never imports a product encoder. Real Pillow/PyMuPDF/Tesseract
+and English traineddata execute only in owned external CI, under
+`scripts/run-raster-local.py` and the [exact scope](../docs/proposals/raster-local-v1.md).
+The [protocol](../docs/studies/raster-local-v1.json) fixes four identities,
+versions/corpus/expected word order and proof limits before output. This is
+UNRUN preparation, not OCR accuracy or semantic-visual quality evidence. No
+closed PDF, chart, React or public-consumer case is repeated.
