@@ -1,6 +1,9 @@
 # Four installed optional-PDF checks
 
-13 November 2026. Preparation, **UNRUN**. The last public-consumer scope is closed.
+13 November 2026. State at preparation: **UNRUN**. The [first actual invocation](../results/2026/11-13/optional-pdf-consumers-attempt-1.md)
+failed at P02 after P01 passed; P03/P04 remain unrun. The changed second control
+below carries P01 and executes only the unfinished three identities.
+The last public-consumer scope is closed.
 This separate Tier 2 packet addresses the existing optional PDF parser using
 only independently authored small PDF bytes and the unchanged released 0.2.0
 packages. No old chart, HTML transport, React or public-consumer case is rerun.
@@ -44,7 +47,7 @@ database, registry publication or product dependency change is involved.
 | Identity | Actual boundary | Required observation |
 | --- | --- | --- |
 | P01 | Installed Python0.2.0 + real PyMuPDF1.26.6, authored two-page PDF | Exact four texts/order, actual page1/2 and300x400 point geometry, finite in-page nonzero block boxes and no invented confidence |
-| P02 | Installed Node0.2.0 local provider -> actual installed Python subprocess -> normalized result | Same text/pages, four exact UTF-16 citation slices, block/bbox/page provenance and chunk/citation references |
+| P02 | Installed Node0.2.0 local provider -> actual installed Python subprocess -> normalized result | Same text/pages, six exact UTF-16 citation slices (four contents/two source gap blocks), four real boxes/no gap boxes, page provenance and chunk/citation references |
 | P03 | Real parser, authored blank PDF, explicit PATH with no Tesseract | Empty page stays empty, dimensions/page retained and required missing scanned-OCR warning; no positive image/scanned claim |
 | P04 | Installed Python file CLI, authored invalid PDF bytes | Actual exit1, empty stdout and generic LOCAL_PARSE_ERROR; authored private marker is not echoed |
 
@@ -82,3 +85,19 @@ This profile cannot establish scanned/image OCR, optional-tool general accuracy,
 hostile/arbitrary PDF safety, visual understanding, all platforms, hosted/live
 providers or full-product acceptance. A failure stays failed until a concrete
 changed repair is reviewed; do not repeat a completed packet for a green badge.
+
+## Changed control 2
+
+The first Node assertion incorrectly omitted the normalizer's documented source
+gap blocks. The concrete repair expects all six exact blocks/citations and
+requires the two blank-line blocks to have no fabricated box. Product/runtime/
+release bytes and the P01/P03 program/fixture generator stay unchanged.
+Parent becomes32e8994c; append AGENTS, modify this proposal/template, Node
+observer and controller, and add only the three original failure/result files.
+The next exact ref is `qa/ocr-optional-pdf-20261113-2`, active workflow path
+`.github/workflows/optional-pdf-consumers-2.yml`; original controls are retired.
+Its receipt separately records P01's actual first-run result and P02/P03/P04's
+new results, never one synthetic four-case invocation. Bind the raw first
+receipt SHA30e20b84,14 original streams,82 parent source files, unchanged P01
+program, runtime versions/public hashes and freshly regenerated fixture bytes
+before carrying it. Do not replay P01. All other limits stay fixed.

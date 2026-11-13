@@ -92,3 +92,14 @@ observations and owned teardown; retire the exact temporary workflow/ref after
 terminal evidence. Local Storage Guard4.1/34GiB still forbids heavy execution.
 Preparation is UNRUN until its exact reviewed source is activated. Native PDF
 text and valid citations never imply scanned OCR or arbitrary-PDF safety.
+
+The [first optional-PDF invocation](docs/results/2026/11-13/optional-pdf-consumers-attempt-1.md)
+passed P01, then failed P02's wrong four-block expectation; normalization
+correctly emits two source gap blocks too. Preserve the failed packet and
+its complete originals. The changed second control explicitly qualifies all
+six blocks/citations and no gap geometry. Carry P01 only through sealed source,
+original-stream/runtime/archive/fixture identity checks; run only unfinished
+P02/P03/P04. Parent32e8994c, five reviewed source/instruction modifications and
+three result files only. First control disabled/ref deleted/read back. New
+exact QA2/path and all unchanged bounds are in the proposal. No product fix,
+rebuild, release replacement, old-case replay or single four-pass claim.

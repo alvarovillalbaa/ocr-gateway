@@ -18,9 +18,9 @@ assert.equal(doc.provider, 'local');
 assert.deepEqual(doc.pages.map(p => p.pageNumber), [1, 2]);
 const expected = ['Harbor ledger', 'First page owns these words.', 'Quarry register', 'Second page keeps a separate anchor.'];
 const blocks = doc.pages.flatMap(p => p.blocks);
-assert.deepEqual(blocks.map(b => b.text), expected);
+assert.deepEqual(blocks.map(b => b.text), [expected[0], '\n\n', expected[1], expected[2], '\n\n', expected[3]]);
 assert.equal(doc.text, expected.join('\n\n'));
-assert.equal(doc.citations.length, 4);
+assert.equal(doc.citations.length, 6);
 for (const citation of doc.citations) {
   assert.equal(doc.text.slice(citation.start, citation.end), citation.quote);
   const page = doc.pages.find(p => p.blocks.some(b => b.id === citation.blockId));
@@ -30,7 +30,13 @@ for (const citation of doc.citations) {
   assert.deepEqual(citation.bbox, block.bbox);
   assert.equal(citation.pageNumber, page.pageNumber);
   assert.ok([1, 2].includes(citation.pageNumber));
-  assert.equal(citation.bbox.unit, 'point');
+  if (citation.quote.trim()) {
+    assert.equal(citation.bbox.unit, 'point');
+    assert.ok(citation.bbox.width > 0 && citation.bbox.height > 0);
+  } else {
+    assert.equal(citation.quote, '\n\n');
+    assert.equal(citation.bbox, undefined);
+  }
 }
 assert.ok(doc.chunks.length > 0);
 for (const chunk of doc.chunks) {

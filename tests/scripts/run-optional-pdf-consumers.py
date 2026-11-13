@@ -22,8 +22,9 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 import zipfile
 
 REPO = "alvarovillalbaa/ocr-gateway"
-BRANCH = "qa/ocr-optional-pdf-20261113-1"
-PARENT = "81d4b71c6757f19c6c7be356f71aa39401565cb7"
+BRANCH = "qa/ocr-optional-pdf-20261113-2"
+PARENT = "32e8994c615645591755c642c0a05e1338de1a63"
+FIRST_RECEIPT_SHA = "30e20b848d610c8bb0e274c84c1932b5f957302221850def6311135b8c9f8d8f"
 SUPPORT_SHA = "311cdf102efe1162be64bebad16b9c875371404b9539ac88bfc9cf7c130668f9"
 BASE = "https://github.com/" + REPO + "/releases/download/v0.2.0-native-charts.1/"
 ASSETS = {
@@ -54,7 +55,7 @@ parsed = ast.parse(support)
 definitions = [node for node in parsed.body if isinstance(node, ast.FunctionDef) and node.name in names]
 if {node.name for node in definitions} != names:
     raise RuntimeError("Trusted support definition set")
-exec(compile(ast.Module(body=definitions, type_ignores=[]), "hash-bound-operational-support", "exec"), globals())
+exec(compile(ast.Module(body=definitions, type_ignores=[]), str(repo / "tests/scripts/run-fresh-public-consumers.py"), "exec"), globals())
 
 
 class AnonymousRedirect(HTTPRedirectHandler):
@@ -131,6 +132,40 @@ def run(argv, *, env=None, stdin=None, expected_exit=0, timeout=90):
     return output.read_bytes(), errors.read_bytes()
 
 
+def carry_p01():
+    raw = (repo / "docs/results/2026/11-13/optional-pdf-consumers-attempt-1.json").read_bytes()
+    need(sha(raw) == FIRST_RECEIPT_SHA, "Prior original receipt identity")
+    prior = json.loads(raw)
+    need(prior["sourceCommit"] == PARENT and prior["accepted"] is False and prior["exitCode"] == 1, "Prior failed packet preserved")
+    need(prior["cleanup"]["rootAbsent"] and not prior["cleanup"]["ownedDescendants"], "Prior owned teardown")
+    need(all(g["matches"] and g["files"] == 82 for g in prior["sourceGuards"]) and len(prior["sourceGuards"]) == 4, "Prior source guards")
+    for name, row in prior["sourceFiles"].items():
+        body = subprocess.check_output(["git", "show", PARENT + ":" + name])
+        need(len(body) == row["bytes"] and sha(body) == row["sha256"], "Prior source original bytes")
+    need(sha((repo / "tests/smoke/optional-pdf-python.py").read_bytes()) == prior["sourceFiles"]["tests/smoke/optional-pdf-python.py"]["sha256"], "Unchanged P01 program and fixture generator")
+    need(prior["runtime"]["python"] == sys.version and prior["runtime"]["node"] == "v24.21.0", "Same carried runtime profile")
+    for name, (size, digest) in ASSETS.items():
+        old = next(row for row in prior["downloads"] if row["name"] == name)
+        need(old["bytes"] == size and old["sha256"] == digest, "Prior actual archive identities")
+    decoded = []
+    for command in prior["commands"]:
+        need(command["reaped"] and command["outputDescriptorsClosed"] and command["observedGroupsAbsent"], "Prior command closure")
+        values = {}
+        for channel in ("stdout", "stderr"):
+            stream = command[channel]
+            data = gzip.decompress(base64.b64decode(stream["gzipBase64"], validate=True))
+            need(stream["complete"] and len(data) == stream["bytes"] == stream["retainedBytes"] and sha(data) == stream["sha256"], "Prior original streams")
+            values[channel] = data
+        decoded.append(values)
+    need(len(decoded) == 7 and prior["commands"][5]["argv"][-1] == "P01" and prior["commands"][5]["exitCode"] == 0, "Actual prior P01 child")
+    observation = json.loads(decoded[5]["stdout"])
+    need(observation == prior["checks"]["P01"] and observation["identity"] == "P01" and observation["passed"] is True and set(prior["checks"]) == {"P01"}, "Actual P01 result only")
+    report["carriedAcceptedChecks"] = {"P01": {"observation": observation, "sourceCommit": PARENT,
+                                                "originalReceiptSha256": FIRST_RECEIPT_SHA, "executedThisInvocation": False,
+                                                "originalStreamsVerified": 14, "unchangedPythonProgram": True}}
+    return prior["fixtures"]
+
+
 status = 1
 try:
     need(os.environ.get("CI") == "true" and os.environ.get("GITHUB_REPOSITORY") == REPO, "Public CI only")
@@ -141,11 +176,14 @@ try:
     need(subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip() == PARENT, "Exact canonical parent")
     need((repo / "AGENTS.md").read_bytes().startswith(subprocess.check_output(["git", "show", PARENT + ":AGENTS.md"])), "Append-only instructions")
     changed = set(subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"], text=True).splitlines())
-    need(changed == {"AGENTS.md", "tests/scripts/run-optional-pdf-consumers.py", "tests/smoke/optional-pdf-python.py", "tests/smoke/optional-pdf-node.mjs",
-                     "docs/proposals/optional-pdf-consumers.md", "docs/proposals/optional-pdf-consumers.workflow.yml.example"}, "Only approved source paths")
+    need(changed == {"AGENTS.md", "tests/scripts/run-optional-pdf-consumers.py", "tests/smoke/optional-pdf-node.mjs",
+                     "docs/proposals/optional-pdf-consumers.md", "docs/proposals/optional-pdf-consumers.workflow.yml.example",
+                     "docs/results/2026/11-13/optional-pdf-consumers-attempt-1.json", "docs/results/2026/11-13/optional-pdf-consumers-attempt-1.zip",
+                     "docs/results/2026/11-13/optional-pdf-consumers-attempt-1.md"}, "Only reviewed repair/evidence paths")
     need(sys.version_info[:2] == (3, 12), "Frozen Ubuntu Python profile")
     need(shutil.disk_usage(os.environ["RUNNER_TEMP"]).free >= 8 * 1024**3, "Runner storage admission")
     report["sourceFiles"] = vector()
+    expected_fixture_hashes = carry_p01()
     report["support"] = {"sha256": SUPPORT_SHA, "definitionsOnly": sorted(names), "oldMainExecuted": False}
     root = Path(tempfile.mkdtemp(prefix="ocr-optional-pdf-", dir=os.environ["RUNNER_TEMP"]))
     os.chmod(root, 0o700)
@@ -217,10 +255,11 @@ try:
         shutil.copyfile(repo / source_name, guards / target_name)
     run([python, "optional-pdf.py", "create-fixtures"])
     report["fixtures"] = inventory(fixtures)
+    need(report["fixtures"] == expected_fixture_hashes, "Fresh fixture bytes equal original P01 inputs")
     runtime = {**bootstrap, "PATH": str(root / "empty-bin"), "FRESH_ROOT": str(root), "FRESH_NETWORK_AUDIT": str(root / "network.jsonl"),
                "NODE_OPTIONS": "--require=" + str(guards / "network.cjs"), "PYTHONPATH": str(guards), "PDF_NODE_PACKAGE": str(installed), "OCR_GATEWAY_PYTHON": python}
     guard("before-new-pdf-identities")
-    for identity_name, argv in (("P01", [python, "optional-pdf.py", "P01"]), ("P02", [node, "optional-pdf.mjs"]), ("P03", [python, "optional-pdf.py", "P03"])):
+    for identity_name, argv in (("P02", [node, "optional-pdf.mjs"]), ("P03", [python, "optional-pdf.py", "P03"])):
         observation = json.loads(run(argv, env=runtime)[0])
         need(observation["identity"] == identity_name and observation["passed"] is True, "PDF identity result")
         report["checks"][identity_name] = observation
@@ -270,7 +309,7 @@ finally:
             status = 1
     report["finishedAt"] = time.time()
     report["exitCode"] = status
-    report["accepted"] = status == 0 and set(report["checks"]) == {"P01", "P02", "P03", "P04"} and report["cleanup"].get("rootAbsent") is True
+    report["accepted"] = status == 0 and set(report["checks"]) == {"P02", "P03", "P04"} and set(report.get("carriedAcceptedChecks", {})) == {"P01"} and report["cleanup"].get("rootAbsent") is True
     report["limits"] = ["Four authored PDF cases on one pinned Linux/Python/PyMuPDF profile; no image/scanned OCR quality or arbitrary-PDF safety claim.",
                         "Runtime network tripwires are application observations, not a kernel sandbox.",
                         "Owned process samples and normal closures do not independently trace every short-lived descendant or attest whole-host disposal.",
