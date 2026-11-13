@@ -1,8 +1,10 @@
 # Installed raster and scanned-PDF OCR
 
 13 November 2026. The [first actual invocation](../results/2026/11-13/raster-local-attempt-1.md)
-failed at a process observer before recognition. All four OCR identities remain
-**UNRUN**. The concrete changed second control is defined below.
+failed at a process observer before recognition. The [second invocation](../results/2026/11-13/raster-local-attempt-2.md)
+retained all outcomes and reached the engine probe, which refused a missing
+libgif decoder. All four OCR identities remain **UNRUN**. Changed controls
+and the separately frozen runtime supplement are defined below.
 The owner's standing all-work approval
 covers this separate Tier2 integration packet. It addresses the core image/
 scanned-PDF path left unqualified by the closed native-text PDF packet. No
@@ -140,3 +142,33 @@ inactive workflow plus the three first-result files. New exact branch
 `.github/workflows/raster-local-v1-2.yml`; first control is disabled/ref deleted.
 All original resource, source/input/installed/model, output and teardown limits
 remain. The new attribution is scoped process evidence, not an all-host trace.
+
+## Changed control 3: explicit decoder supplement
+
+The second job retained34 streams/17 actual outcomes with no observer errors,
+then Tesseract version exited127 for missing`libgif.so.7`. No corpus, model
+recognition or R-case output exists. Preserve both original failures.
+
+The separate [runtime-v2 JSON](../studies/raster-runtime-v2.json), SHA-256
+`d128d3ee5410c8a1ee8c2ccc188259ba25ead0a873f4c961678ec1f9c1f1a316`,
+adds only [libgif7 5.2.2-1ubuntu1.2](https://packages.ubuntu.com/noble/libgif7)
+from authenticated Noble-updates/main using the same Ubuntu keyring, private
+configuration and no-script extraction. This is an explicit runtime-profile
+extension, not a silent amendment of the immutable raster protocol. Core five
+package identities, corpus/font/renderer and consumers remain exact. Record
+and freeze the new decoder's actual signed-index/file/library hashes before
+recognition; no automatic further package/version choice. It enables a shared
+library dependency, not a separate GIF-format acceptance claim.
+
+Move ldd before the engine version probe, retain its complete original inventory,
+require no unresolved dependency and verify the private libgif/Tesseract/Leptonica
+bindings. Then require all four still-unrun identities on the unchanged corpus;
+no prior model/case result is carried. Parent98b2892f: four control/instruction
+modifications plus the supplemental JSON and three second-result originals.
+Exact QA3`qa/ocr-raster-local-20261113-3`, path
+`.github/workflows/raster-local-v1-3.yml`; prior controls disabled/refs deleted.
+All resource, source/output, ownership and teardown fences remain.
+The unchanged R01 consumer runs through a standard-library wrapper which, on
+assertion failure, retains its already returned result from the exception frame
+before rethrowing. It does not replace the parser, alter assertions or execute
+the consumer twice. This preserves negative OCR output without corpus tuning.

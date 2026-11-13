@@ -23,10 +23,24 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 import zipfile
 
 REPO = "alvarovillalbaa/ocr-gateway"
-PARENT = "0a6f41376597e47a4f8abde8f3d59432e0971824"
-BRANCH = "qa/ocr-raster-local-20261113-2"
+PARENT = "98b2892f93d1128c05167cd429a50c7bc18dc16f"
+PRIOR_SOURCE = "0a6f41376597e47a4f8abde8f3d59432e0971824"
+BRANCH = "qa/ocr-raster-local-20261113-3"
 PRIOR_RECEIPT_SHA = "a37184b3936dea954fa5f49f3afd87adec852685bcdddabda8dea250a024c86b"
+RUNTIME_SHA = "d128d3ee5410c8a1ee8c2ccc188259ba25ead0a873f4c961678ec1f9c1f1a316"
 PROTOCOL_SHA = "ec97ea9368b06251030887705f1ab62661c6fd594355ef0e39a489dc25999f29"
+R01_CAPTURE = """import json,runpy,sys
+try:
+    runpy.run_path('raster-local.py',run_name='__main__')
+except BaseException:
+    current=sys.exc_info()[2]
+    while current is not None:
+        if current.tb_frame.f_code.co_filename.endswith('raster-local.py') and 'result' in current.tb_frame.f_locals:
+            print('OCR_RASTER_RETURNED_RESULT='+json.dumps(current.tb_frame.f_locals['result'],ensure_ascii=True),flush=True)
+            break
+        current=current.tb_next
+    raise
+"""
 MAX_STREAM = 1024 * 1024
 repo = Path.cwd()
 source = os.environ.get("SOURCE_COMMIT", "")
@@ -213,6 +227,8 @@ def prepare_apt():
         (apt / name).mkdir(parents=True, mode=0o700)
     (apt / "state/status").write_text("")
     source_line = "deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble main universe\n"
+    need(runtime_supplement["additional_signed_sources"] == [{"archive": "https://archive.ubuntu.com/ubuntu", "suite": "noble-updates", "components": ["main"], "signed_by": "/usr/share/keyrings/ubuntu-archive-keyring.gpg"}], "Exact supplementary signed source")
+    source_line += "deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] https://archive.ubuntu.com/ubuntu noble-updates main\n"
     (apt / "etc/sources.list").write_text(source_line)
     options = {
         "Dir": str(apt), "Dir::Etc": str(apt / "etc"), "Dir::Etc::main": "/dev/null", "Dir::Etc::parts": str(apt / "etc/parts"),
@@ -233,7 +249,7 @@ def prepare_apt():
     report["apt"] = {"privateConfiguration": config, "sources": source_line, "globalHooksLoaded": False, "installOrMaintainerScriptExecuted": False,
                      "authenticatedUpdateCommand": len(report["commands"]) - 1, "indexes": leaf_vector(apt / "state/lists"),
                      "ubuntuArchiveKeyringSha256": sha(Path("/usr/share/keyrings/ubuntu-archive-keyring.gpg").read_bytes()), "packages": []}
-    for expected in protocol["apt"]["packages"]:
+    for expected in protocol["apt"]["packages"] + runtime_supplement["additional_packages"]:
         raw = run(["apt-cache", "show", expected["name"] + "=" + expected["version"]], env=apt_env)[0]
         stanzas = [part for part in raw.decode().strip().split("\n\n") if part.strip()]
         need(len(stanzas) == 1, "One exact signed-index package record")
@@ -242,9 +258,12 @@ def prepare_apt():
         filename = str(archive_name(fields["Filename"]))
         need(filename.startswith("pool/") and re.fullmatch(r"[a-f0-9]{64}", fields["SHA256"]), "Signed package identity fields")
         size = int(fields["Size"])
-        prior_package = prior_packages[expected["name"]]
-        need(prior_package["filename"] == filename and prior_package["sha256"] == fields["SHA256"] and prior_package["bytes"] == size,
-             "Previously observed exact native package identity")
+        if expected["name"] in prior_packages:
+            prior_package = prior_packages[expected["name"]]
+            need(prior_package["filename"] == filename and prior_package["sha256"] == fields["SHA256"] and prior_package["bytes"] == size,
+                 "Previously observed exact native package identity")
+        else:
+            need(expected == {"name": "libgif7", "version": "5.2.2-1ubuntu1.2", "architecture": "amd64"}, "Only fixed GIF decoder addition")
         need(0 < size < 32 * 1024**2, "Package size bound")
         name = PurePosixPath(filename).name
         fetch(name, "https://archive.ubuntu.com/ubuntu/" + filename, size, expected_sha=fields["SHA256"], expected_bytes=size)
@@ -276,7 +295,8 @@ try:
     need(event["ref_type"] == "branch" and event["ref"] == BRANCH and event["repository"]["private"] is False, "Public branch event")
     need(subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip() == source and subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip() == PARENT, "Exact prepared source/parent")
     repair_paths = {"AGENTS.md", "tests/scripts/run-raster-local.py", "docs/proposals/raster-local-v1.md", "docs/proposals/raster-local-v1.workflow.yml.example",
-                    "docs/results/2026/11-13/raster-local-attempt-1.json", "docs/results/2026/11-13/raster-local-attempt-1.zip", "docs/results/2026/11-13/raster-local-attempt-1.md"}
+                    "docs/studies/raster-runtime-v2.json", "docs/results/2026/11-13/raster-local-attempt-2.json", "docs/results/2026/11-13/raster-local-attempt-2.zip",
+                    "docs/results/2026/11-13/raster-local-attempt-2.md"}
     changes = set(subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"], text=True).splitlines())
     need(changes == repair_paths, "Exact changed control/evidence paths only")
     need((repo / "AGENTS.md").read_bytes().startswith(subprocess.check_output(["git", "show", PARENT + ":AGENTS.md"])), "Append-only instructions")
@@ -284,16 +304,26 @@ try:
     protocol_raw = (repo / "docs/studies/raster-local-v1.json").read_bytes()
     need(sha(protocol_raw) == PROTOCOL_SHA, "Predeclared raster protocol bytes")
     protocol = json.loads(protocol_raw)
+    runtime_raw = (repo / "docs/studies/raster-runtime-v2.json").read_bytes()
+    need(sha(runtime_raw) == RUNTIME_SHA, "Frozen runtime supplement")
+    runtime_supplement = json.loads(runtime_raw)
+    need(runtime_supplement["raster_protocol_sha256"] == PROTOCOL_SHA and runtime_supplement["additional_packages"] == [{"name": "libgif7", "version": "5.2.2-1ubuntu1.2", "architecture": "amd64"}], "Exact runtime-only addition")
+    second_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-2.json").read_bytes()
+    need(sha(second_raw) == runtime_supplement["observed_failure"]["receipt_sha256"], "Original second failed receipt")
+    second = json.loads(second_raw)
+    need(second["sourceCommit"] == PARENT and second["accepted"] is False and second["checks"] == {} and "recognitionFreeze" not in second,
+         "No prior model/case result carried")
     prior_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-1.json").read_bytes()
     need(sha(prior_raw) == PRIOR_RECEIPT_SHA, "Original first failed receipt")
     prior = json.loads(prior_raw)
-    need(prior["sourceCommit"] == PARENT and prior["accepted"] is False and prior["checks"] == {} and "recognitionFreeze" not in prior,
+    need(prior["sourceCommit"] == PRIOR_SOURCE and prior["accepted"] is False and prior["checks"] == {} and "recognitionFreeze" not in prior,
          "No prior OCR case or result carried")
     prior_packages = {row["name"]: row for row in prior["apt"]["packages"]}
     need(set(prior_packages) == {row["name"] for row in protocol["apt"]["packages"]}, "Exact prior native package set")
     need(shutil.disk_usage(os.environ["RUNNER_TEMP"]).free >= 8 * 1024**3, "Runner storage admission")
     report["sourceFiles"] = vector()
     report["protocol"] = {"sha256": PROTOCOL_SHA, "original": capture(protocol_raw)}
+    report["runtimeSupplement"] = {"sha256": RUNTIME_SHA, "original": capture(runtime_raw)}
     report["priorMetadataBinding"] = {"originalReceiptSha256": PRIOR_RECEIPT_SHA, "actualOcrCasesCarried": 0, "packages": prior_packages}
     root = Path(tempfile.mkdtemp(prefix="ocr-raster-local-", dir=os.environ["RUNNER_TEMP"]))
     os.chmod(root, 0o700)
@@ -366,15 +396,17 @@ try:
         shutil.copyfile(repo / source_name, guards / target)
     recognition_env = {**bootstrap, "PATH": str(native / "usr/bin"), "LD_LIBRARY_PATH": str(native / "usr/lib/x86_64-linux-gnu"),
                        "TESSDATA_PREFIX": str(native / "usr/share/tesseract-ocr/5/tessdata"), "OMP_THREAD_LIMIT": "1", "OMP_NUM_THREADS": "1"}
-    version_out, version_err = run([str(executable), "--version"], env=recognition_env)
-    need((version_out + version_err).decode().splitlines()[0] == "tesseract 5.3.4", "Actual pinned Tesseract")
+    report["nativeDependencyOriginalCommand"] = len(report["commands"])
     ldd = run(["ldd", str(executable)], env={**recognition_env, "PATH": bootstrap["PATH"]})[0].decode()
     need("not found" not in ldd, "Resolved native dependencies")
-    for library in ("libtesseract.so.5", "liblept.so.5"):
+    for library in ("libtesseract.so.5", "liblept.so.5", "libgif.so.7"):
         match = re.search(re.escape(library) + r"\s+=>\s+([^\s]+)", ldd)
         need(match is not None and Path(match.group(1)).resolve().is_relative_to(native), "Pinned private OCR library binding")
     libraries = sorted(set(re.findall(r"(?:=>\s+)?(/[^\s()]+)", ldd)))
     report["nativeDependencies"] = [{"path": str(Path(p).resolve()), "bytes": Path(p).stat().st_size, "sha256": sha(Path(p).read_bytes())} for p in libraries]
+    version_command_index = len(report["commands"])
+    version_out, version_err = run([str(executable), "--version"], env=recognition_env)
+    need((version_out + version_err).decode().splitlines()[0] == "tesseract 5.3.4", "Actual pinned Tesseract")
     fixture_out = run([python, "raster_fixtures.py", str(fixtures), str(root / "protocol.json")], env=recognition_env)[0]
     report["fixtureAdmission"] = json.loads(fixture_out)
     need(report["fixtureAdmission"]["nativePdfText"] == "" and report["fixtureAdmission"]["pdfFonts"] == 0 and report["fixtureAdmission"]["pdfImages"] == 1, "Image-only PDF admission")
@@ -390,14 +422,15 @@ try:
     native_before = leaf_vector(native)
     need(any(row["path"].endswith("eng.traineddata") for row in native_before), "Actual English traineddata")
     report["recognitionFreeze"] = {"beforeAnyRecognition": True, "utcEpoch": time.time(), "protocolSha256": PROTOCOL_SHA,
+                                   "runtimeSupplementSha256": RUNTIME_SHA,
                                    "nativeVector": native_before, "installed": installed_before, "fixtures": report["fixtures"],
-                                   "tesseractVersionOriginalCommand": len(report["commands"]) - 3,
+                                   "tesseractVersionOriginalCommand": version_command_index,
                                    "engineAndEnglishModelIdentityPolicy": "Exact predeclared versions from authenticated Ubuntu indexes; actual package/binary/model hashes frozen before the first OCR result, not claimed predeclared."}
     runtime = {**recognition_env, "FRESH_NETWORK_AUDIT": str(root / "network.jsonl"), "NODE_OPTIONS": "--require=" + str(guards / "network.cjs"),
                "PYTHONPATH": str(guards), "RASTER_FIXTURES": str(fixtures), "RASTER_PROTOCOL": str(root / "protocol.json"),
                "RASTER_NODE_PACKAGE": str(installed), "OCR_GATEWAY_PYTHON": python}
     guard("before-recognition")
-    for case, argv in (("R01", [python, "raster-local.py"]), ("R02", [node, "raster-local.mjs", "R02"])):
+    for case, argv in (("R01", [python, "-c", R01_CAPTURE]), ("R02", [node, "raster-local.mjs", "R02"])):
         observation = json.loads(run(argv, env=runtime)[0])
         need(observation["identity"] == case and observation["passed"] is True, "Actual raster identity")
         report["checks"][case] = observation

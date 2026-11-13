@@ -146,3 +146,14 @@ identities. Parent0a6f4137, four modified control/instruction documents plus
 three original-result files only. No protocol/corpus/renderer/consumer/product
 or package-version change, permission bypass or sensitive-read retry. All four
 new cases require fresh execution; no model/case pass is carried.
+
+The [second raster invocation](docs/results/2026/11-13/raster-local-attempt-2.md)
+retains all34 streams/17 actual exits with no observer error, then stops at
+engine exit127 for missinglibgif.so.7. No fixture/model/R-case ran. Preserve
+both failed packets and the first missing exit. The separate frozen runtime-v2
+supplement explicitly adds signed Noble-updates/main libgif7 5.2.2-1ubuntu1.2,
+private extraction/binding only; no automatic dependency expansion or global
+change. Core raster protocol/corpus/font/renderer/consumers/five native hashes
+stay exact. Move full ldd admission before engine probe and require all four
+still-unrun cases. Parent98b2892f, four modified controls/instructions plus
+supplemental JSON/three second-result files only. Previous controls retired.
