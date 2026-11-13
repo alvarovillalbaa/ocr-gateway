@@ -133,3 +133,16 @@ strict native-engine network confinement or full-product acceptance.
 Originals cover supervisor streams/application OCR text; the unchanged product
 suppresses native engine diagnostics and trims output-file edges. State that
 limit explicitly; never claim a complete native-engine transcript.
+
+The [first raster invocation](docs/results/2026/11-13/raster-local-attempt-1.md)
+failed before any OCR at an observer denial during venv creation. Preserve its
+26 complete streams and missing14th-command exit/streams; all four cases stay
+unrun. First cleanup/source guards passed; workflow disabled/ref deleted.
+The changed second control uses public stat ancestry/groups and stable PID
+starts without environ/cwd/cmdline reads, retains child originals before
+observer acceptance, and keeps owned uncertainty fatal. It retains full authored
+fixture originals before recognition and rechecks the first signed-package
+identities. Parent0a6f4137, four modified control/instruction documents plus
+three original-result files only. No protocol/corpus/renderer/consumer/product
+or package-version change, permission bypass or sensitive-read retry. All four
+new cases require fresh execution; no model/case pass is carried.

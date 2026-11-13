@@ -23,14 +23,15 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 import zipfile
 
 REPO = "alvarovillalbaa/ocr-gateway"
-PARENT = "e59ac9215e218fb9f6e2c98e4486a7d2da22dc92"
-BRANCH = "qa/ocr-raster-local-20261113-1"
+PARENT = "0a6f41376597e47a4f8abde8f3d59432e0971824"
+BRANCH = "qa/ocr-raster-local-20261113-2"
+PRIOR_RECEIPT_SHA = "a37184b3936dea954fa5f49f3afd87adec852685bcdddabda8dea250a024c86b"
 PROTOCOL_SHA = "ec97ea9368b06251030887705f1ab62661c6fd594355ef0e39a489dc25999f29"
 MAX_STREAM = 1024 * 1024
 repo = Path.cwd()
 source = os.environ.get("SOURCE_COMMIT", "")
 root = None
-groups, baseline = [], {}
+groups, baseline, owned_processes, leader_starts = [], {}, {}, {}
 sha = lambda raw: hashlib.sha256(raw).hexdigest()
 deadline = time.monotonic() + max(0, 900 - (time.time() - float(os.environ.get("RASTER_STARTED_EPOCH", "0"))))
 report = {"schemaVersion": 1, "repository": REPO, "sourceCommit": source, "parent": PARENT, "startedAt": time.time(),
@@ -39,8 +40,7 @@ report = {"schemaVersion": 1, "repository": REPO, "sourceCommit": source, "paren
 # Load only explicit hash-bound operational definitions, never either old body.
 for path, expected, names in (
     ("tests/scripts/run-fresh-public-consumers.py", "311cdf102efe1162be64bebad16b9c875371404b9539ac88bfc9cf7c130668f9",
-     {"need", "capture", "vector", "guard", "group_live", "archive_name", "inventory", "owned_descendants"}),
-    ("tests/scripts/run-optional-pdf-consumers.py", "0b3b55983ab8b7ea3ac3c139050fd0ddd906b5197628ab9e5ae62cc6de83da32", {"run"}),
+     {"need", "capture", "vector", "guard", "group_live", "archive_name", "inventory"}),
 ):
     raw = (repo / path).read_bytes()
     if sha(raw) != expected:
@@ -49,6 +49,114 @@ for path, expected, names in (
     if {node.name for node in nodes} != names:
         raise RuntimeError("Operational definition set changed")
     exec(compile(ast.Module(body=nodes, type_ignores=[]), str(repo / path), "exec"), globals())
+
+
+def process_row(entry):
+    fields = (entry / "stat").read_text().rpartition(") ")[2].split()
+    return {"pid": int(entry.name), "parentPid": int(fields[1]), "pgid": int(fields[2]),
+            "sessionId": int(fields[3]), "startTime": fields[19], "state": fields[0]}
+
+
+def owned_descendants():
+    """Attribute public process metadata by anchored ancestry/groups, never environ."""
+    rows, fatal = {}, []
+    known_leaders = {process.pid for process in groups}
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit() or int(entry.name) == os.getpid():
+            continue
+        try:
+            if entry.stat().st_uid != os.getuid():
+                continue
+            row = process_row(entry)
+            if baseline.get(entry.name) != row["startTime"]:
+                rows[row["pid"]] = row
+        except (FileNotFoundError, ProcessLookupError):
+            pass
+        except PermissionError as error:
+            diagnostic = {"pid": int(entry.name), "surface": "public-stat", "error": str(error)}
+            report.setdefault("processObservationErrors", []).append(diagnostic)
+            if int(entry.name) in known_leaders or int(entry.name) in owned_processes:
+                fatal.append({**diagnostic, "inspectionDenied": True})
+    attributed = {pid for pid, row in rows.items()
+                  if leader_starts.get(pid) == row["startTime"] or owned_processes.get(pid) == row["startTime"]}
+    while True:
+        expanded = attributed | {pid for pid, row in rows.items()
+                                 if row["parentPid"] == os.getpid() or row["parentPid"] in attributed
+                                 or row["pgid"] in attributed or row["sessionId"] in attributed}
+        if expanded == attributed:
+            break
+        attributed = expanded
+    result = []
+    for pid in sorted(attributed):
+        row = rows[pid]
+        owned_processes[pid] = row["startTime"]
+        if row["state"] != "Z":
+            result.append({key: value for key, value in row.items() if key != "state"})
+    return result + fatal
+
+
+def run(argv, *, env=None, stdin=None, expected_exit=0, timeout=90):
+    row = {"argv": argv, "expectedExit": expected_exit, "startedAt": time.time()}
+    report["commands"].append(row)
+    output, errors = root / f"command-{len(report['commands'])}.out", root / f"command-{len(report['commands'])}.err"
+    seen, observer_error = {}, None
+    process = None
+    try:
+        with output.open("xb") as stdout, errors.open("xb") as stderr:
+            os.chmod(output, 0o600)
+            os.chmod(errors, 0o600)
+            process = subprocess.Popen(argv, cwd=consumer, env=env or bootstrap, stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,
+                                       stdout=stdout, stderr=stderr, start_new_session=True)
+            groups.append(process)
+            row["pid"] = process.pid
+            try:
+                started = process_row(Path("/proc") / str(process.pid))
+                leader_starts[process.pid] = started["startTime"]
+                row["startTime"] = started["startTime"]
+            except (FileNotFoundError, ProcessLookupError):
+                row["startTimeObservation"] = "already absent"
+            except PermissionError:
+                observer_error = traceback.format_exc()
+            if stdin is not None:
+                process.stdin.write(stdin)
+                process.stdin.close()
+            end = min(deadline, time.monotonic() + timeout)
+            while process.poll() is None:
+                if observer_error is None:
+                    try:
+                        for observation in owned_descendants():
+                            need("inspectionDenied" not in observation, "Owned public process metadata denied")
+                            seen[(observation["pid"], observation["startTime"])] = observation
+                    except BaseException:
+                        # Preserve the actual child outcome before any observer refusal.
+                        # Do not retry a denied surface during this command.
+                        observer_error = traceback.format_exc()
+                if time.monotonic() >= end:
+                    row["timedOut"] = True
+                    os.killpg(process.pid, signal.SIGTERM)
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        os.killpg(process.pid, signal.SIGKILL)
+                        process.wait(timeout=5)
+                    break
+                time.sleep(.05)
+            process.wait(timeout=5)
+    finally:
+        if process is not None and process.poll() is not None:
+            row.update({"exitCode": process.returncode, "reaped": True, "outputDescriptorsClosed": True,
+                        "stdout": capture(output.read_bytes()), "stderr": capture(errors.read_bytes()),
+                        "observedProcesses": list(seen.values()), "observerError": observer_error})
+    end = time.monotonic() + 2
+    pgids = {process.pid} | {observation["pgid"] for observation in seen.values()}
+    while any(group_live(pgid) for pgid in pgids) and time.monotonic() < end:
+        time.sleep(.05)
+    row["observedGroupsAbsent"] = all(not group_live(pgid) for pgid in pgids)
+    print("OCR_RASTER_COMMAND", json.dumps({"ordinal": len(report["commands"]), "exitCode": process.returncode}), flush=True)
+    need(observer_error is None, "Owned process observer refused after retaining child originals")
+    need(row["observedGroupsAbsent"] and row["stdout"]["complete"] and row["stderr"]["complete"], "Command stream/process closure")
+    need(process.returncode == expected_exit and not row.get("timedOut"), "Unexpected command exit")
+    return output.read_bytes(), errors.read_bytes()
 
 
 class AnonymousRedirect(HTTPRedirectHandler):
@@ -134,6 +242,9 @@ def prepare_apt():
         filename = str(archive_name(fields["Filename"]))
         need(filename.startswith("pool/") and re.fullmatch(r"[a-f0-9]{64}", fields["SHA256"]), "Signed package identity fields")
         size = int(fields["Size"])
+        prior_package = prior_packages[expected["name"]]
+        need(prior_package["filename"] == filename and prior_package["sha256"] == fields["SHA256"] and prior_package["bytes"] == size,
+             "Previously observed exact native package identity")
         need(0 < size < 32 * 1024**2, "Package size bound")
         name = PurePosixPath(filename).name
         fetch(name, "https://archive.ubuntu.com/ubuntu/" + filename, size, expected_sha=fields["SHA256"], expected_bytes=size)
@@ -164,18 +275,26 @@ try:
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
     need(event["ref_type"] == "branch" and event["ref"] == BRANCH and event["repository"]["private"] is False, "Public branch event")
     need(subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip() == source and subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip() == PARENT, "Exact prepared source/parent")
-    additions = {"docs/studies/raster-local-v1.json", "tests/helpers/raster_fixtures.py", "tests/integration/raster-local-python.py", "tests/integration/raster-local-node.mjs",
-                 "tests/scripts/run-raster-local.py", "docs/proposals/raster-local-v1.md", "docs/proposals/raster-local-v1.workflow.yml.example"}
+    repair_paths = {"AGENTS.md", "tests/scripts/run-raster-local.py", "docs/proposals/raster-local-v1.md", "docs/proposals/raster-local-v1.workflow.yml.example",
+                    "docs/results/2026/11-13/raster-local-attempt-1.json", "docs/results/2026/11-13/raster-local-attempt-1.zip", "docs/results/2026/11-13/raster-local-attempt-1.md"}
     changes = set(subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"], text=True).splitlines())
-    need(changes == additions | {"AGENTS.md", "tests/README.md"}, "Exact new scope paths only")
+    need(changes == repair_paths, "Exact changed control/evidence paths only")
     need((repo / "AGENTS.md").read_bytes().startswith(subprocess.check_output(["git", "show", PARENT + ":AGENTS.md"])), "Append-only instructions")
     need(sys.version_info[:2] == (3, 12) and platform.machine() == "x86_64", "Predeclared Python/platform")
     protocol_raw = (repo / "docs/studies/raster-local-v1.json").read_bytes()
     need(sha(protocol_raw) == PROTOCOL_SHA, "Predeclared raster protocol bytes")
     protocol = json.loads(protocol_raw)
+    prior_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-1.json").read_bytes()
+    need(sha(prior_raw) == PRIOR_RECEIPT_SHA, "Original first failed receipt")
+    prior = json.loads(prior_raw)
+    need(prior["sourceCommit"] == PARENT and prior["accepted"] is False and prior["checks"] == {} and "recognitionFreeze" not in prior,
+         "No prior OCR case or result carried")
+    prior_packages = {row["name"]: row for row in prior["apt"]["packages"]}
+    need(set(prior_packages) == {row["name"] for row in protocol["apt"]["packages"]}, "Exact prior native package set")
     need(shutil.disk_usage(os.environ["RUNNER_TEMP"]).free >= 8 * 1024**3, "Runner storage admission")
     report["sourceFiles"] = vector()
     report["protocol"] = {"sha256": PROTOCOL_SHA, "original": capture(protocol_raw)}
+    report["priorMetadataBinding"] = {"originalReceiptSha256": PRIOR_RECEIPT_SHA, "actualOcrCasesCarried": 0, "packages": prior_packages}
     root = Path(tempfile.mkdtemp(prefix="ocr-raster-local-", dir=os.environ["RUNNER_TEMP"]))
     os.chmod(root, 0o700)
     identity = (root.stat().st_dev, root.stat().st_ino, root.stat().st_uid)
@@ -260,6 +379,13 @@ try:
     report["fixtureAdmission"] = json.loads(fixture_out)
     need(report["fixtureAdmission"]["nativePdfText"] == "" and report["fixtureAdmission"]["pdfFonts"] == 0 and report["fixtureAdmission"]["pdfImages"] == 1, "Image-only PDF admission")
     report["fixtures"] = inventory(fixtures)
+    report["fixtureOriginals"] = {}
+    for name, identity_row in report["fixtures"].items():
+        body = (fixtures / name).read_bytes()
+        packed = gzip.compress(body, mtime=0)
+        need(len(body) <= 4 * 1024**2 and len(packed) <= 1024**2 and sha(body) == identity_row["sha256"], "Full authored fixture retention bound")
+        report["fixtureOriginals"][name] = {"encoding": "gzip-base64", "bytes": len(body), "sha256": sha(body), "compressedBytes": len(packed),
+                                           "data": base64.b64encode(packed).decode(), "complete": True, "retained": True}
     installed_before = {"node": inventory(installed), "pythonSite": inventory(site)}
     native_before = leaf_vector(native)
     need(any(row["path"].endswith("eng.traineddata") for row in native_before), "Actual English traineddata")
@@ -315,6 +441,7 @@ finally:
     report["exitCode"], report["finishedAt"] = status, time.time()
     report["accepted"] = status == 0 and set(report["checks"]) == {"R01", "R02", "R03", "R04"} and report["cleanup"].get("rootAbsent") is True
     report["limits"] = ["Real local Tesseract/English traineddata recognition on four authored cases; no hosted provider/model API or paid call.",
+                        "Owned process attribution uses public stat ancestry/groups and stable PID start times; no process environ/cwd/cmdline reads. Unattributed metadata errors do not establish whole-host absence.",
                         "Original supervisor streams/application OCR text are retained; unchanged product suppresses native engine diagnostics and strips output-file edges. No complete native-engine transcript.",
                         "Simple fixed English raster fixtures do not establish general OCR accuracy, arbitrary-file security, visual understanding or all platforms.",
                         "Package identities are observed from authenticated signed indexes; hashes are frozen before recognition, not all predeclared before download.",

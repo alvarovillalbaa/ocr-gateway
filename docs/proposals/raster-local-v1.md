@@ -1,6 +1,9 @@
 # Installed raster and scanned-PDF OCR
 
-13 November 2026. **Prepared, UNRUN.** The owner's standing all-work approval
+13 November 2026. The [first actual invocation](../results/2026/11-13/raster-local-attempt-1.md)
+failed at a process observer before recognition. All four OCR identities remain
+**UNRUN**. The concrete changed second control is defined below.
+The owner's standing all-work approval
 covers this separate Tier2 integration packet. It addresses the core image/
 scanned-PDF path left unqualified by the closed native-text PDF packet. No
 closed chart, React, public-consumer or native-PDF identity is replayed.
@@ -109,3 +112,31 @@ setting belongs to this scope. Full product/hosting remains unfinished.
 - [Ubuntu Noble Tesseract packages](https://packages.ubuntu.com/search?keywords=tesseract-ocr&suite=noble), [Leptonica](https://packages.ubuntu.com/en/noble/libs/liblept5) and authenticated APT metadata own native versions/payload identities.
 - [APT configuration manual](https://manpages.ubuntu.com/manpages/noble/man5/apt.conf.5.html) defines APT_CONFIG ordering/private directories.
 - [Pillow13 files](https://pypi.org/project/pillow/13.0.0/) own the wheel digest; [ImageFont](https://pillow.readthedocs.io/en/stable/reference/ImageFont.html) documents the bundled default Aileron font.
+
+## Changed control 2
+
+Preserve the first failed report, including its missing14th-command exit/
+streams. Its private signed package observations succeeded, but no parser,
+fixture, recognition freeze or OCR case ran. Exact denied PID/cause is unknown.
+Do not repeat a sensitive read as a recovery strategy.
+
+The new supervisor attributes public stat records through anchored direct
+leaders, parent/group/session ancestry and stable PID-start identities. It
+never reads process environ/cwd/cmdline. Actual child outcomes and streams are
+saved in finally before observer acceptance; owned metadata uncertainty stays
+fatal, while unknown unrelated errors are recorded without a host-wide absence
+claim. No permission bypass, environment-read retry or product change.
+
+Retain all four authored fixture originals losslessly before recognition,
+including the full TIFF under4MiB using a separate bounded compressed capture.
+Bind exact native package identities to the first receipt SHAa37184b3, then
+require the same filenames/sizes/SHA256s from fresh authenticated metadata.
+The immutable protocol ec97ea93, versions, corpus, renderer and consumers stay
+exact; no model/case result is carried. Execute all four still-unrun identities.
+
+Parent becomes0a6f4137; change only this proposal, AGENTS append, controller and
+inactive workflow plus the three first-result files. New exact branch
+`qa/ocr-raster-local-20261113-2`, active path
+`.github/workflows/raster-local-v1-2.yml`; first control is disabled/ref deleted.
+All original resource, source/input/installed/model, output and teardown limits
+remain. The new attribution is scoped process evidence, not an all-host trace.
