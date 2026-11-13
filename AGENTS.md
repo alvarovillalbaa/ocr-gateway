@@ -75,3 +75,20 @@ now accepts F01–F08 together at `1e2dcea5`. Do not repeat this closed profile
 unchanged. Preserve the first failed invocation and its missing buffered receipt/
 unverified cleanup. All release/tag/archive bytes and production SDK inputs stay
 unchanged. Runtime URL refusal is not positive URL/provider or React proof.
+
+## Optional PDF installed-consumer scope — 13 November 2026
+
+Standing all-work approval covers the separate exact
+[four-case packet](docs/proposals/optional-pdf-consumers.md): unchanged public
+0.2.0 archives, real pinned PyMuPDF1.26.6 only in an owned external Ubuntu venv,
+independently authored tiny PDFs, installed Python/Node parsing and truthful
+missing-scanned-OCR/malformed-file results. One free public job capped20min;
+no product/release/lock/runtime dependency change, Pillow/Tesseract/model,
+browser, server/account, API key, database, provider or paid service. The old
+45-chart/eight-public-consumer/ten-React scopes remain closed and are not rerun.
+Only this instruction append and five new prepared files may differ from81d4b71c.
+Preserve original streams, four separate statuses, source/install/input/process
+observations and owned teardown; retire the exact temporary workflow/ref after
+terminal evidence. Local Storage Guard4.1/34GiB still forbids heavy execution.
+Preparation is UNRUN until its exact reviewed source is activated. Native PDF
+text and valid citations never imply scanned OCR or arbitrary-PDF safety.
