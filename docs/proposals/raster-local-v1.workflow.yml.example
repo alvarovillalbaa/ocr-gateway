@@ -5,7 +5,7 @@ permissions:
   contents: read
 jobs:
   raster-local:
-    if: github.repository == 'alvarovillalbaa/ocr-gateway' && github.event.repository.private == false && github.event.ref_type == 'branch' && github.event.ref == 'qa/ocr-raster-local-20261113-3' && github.ref == 'refs/heads/qa/ocr-raster-local-20261113-3'
+    if: github.repository == 'alvarovillalbaa/ocr-gateway' && github.event.repository.private == false && github.event.ref_type == 'branch' && github.event.ref == 'qa/ocr-raster-local-20261113-4' && github.ref == 'refs/heads/qa/ocr-raster-local-20261113-4'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:

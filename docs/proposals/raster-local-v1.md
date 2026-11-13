@@ -3,7 +3,9 @@
 13 November 2026. The [first actual invocation](../results/2026/11-13/raster-local-attempt-1.md)
 failed at a process observer before recognition. The [second invocation](../results/2026/11-13/raster-local-attempt-2.md)
 retained all outcomes and reached the engine probe, which refused a missing
-libgif decoder. All four OCR identities remain **UNRUN**. Changed controls
+libgif decoder. The [third invocation](../results/2026/11-13/raster-local-attempt-3.md)
+loaded the engine, then refused a write-only TIFF fixture handle. All four OCR
+identities remain **UNRUN**. Changed controls
 and the separately frozen runtime supplement are defined below.
 The owner's standing all-work approval
 covers this separate Tier2 integration packet. It addresses the core image/
@@ -172,3 +174,22 @@ The unchanged R01 consumer runs through a standard-library wrapper which, on
 assertion failure, retains its already returned result from the exception frame
 before rethrowing. It does not replace the parser, alter assertions or execute
 the consumer twice. This preserves negative OCR output without corpus tuning.
+
+## Changed control 4: fixture I/O repair
+
+The third job resolved the native runtime, then Pillow's multi-frame TIFF
+appender attempted to read the exclusive write-only output handle. Preserve
+the actual exit1 and all42 original streams; no recognition or case result
+exists. Change only that fixture handle from`xb` to`x+b`. Guard the helper as
+exactly this one replacement against parent3eaf9945. Rendering/font/lines/
+positions/dimensions, protocol ec97ea93, runtime supplement d128d3ee and both
+consumer files remain byte-exact. Require the previous PNG13,842-byte hash
+132e6f7e in the next fixture admission before recognition.
+
+Bind all six native archive filenames/sizes/SHA256 values to the third original
+receipt2fc8f90b and fresh authenticated metadata. No new native dependency or
+model/task selection. All four identities remain fresh/unrun. Parent3eaf9945:
+five modified control/instruction/helper files plus three third-result files.
+Exact branch`qa/ocr-raster-local-20261113-4`, active path
+`.github/workflows/raster-local-v1-4.yml`; all previous controls retired.
+All resource/source/install/input/recognition/output/teardown bounds remain.

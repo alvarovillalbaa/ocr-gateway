@@ -48,7 +48,7 @@ def scanned_pdf(image):
 first, second = render(spec["first_lines"]), render(spec["second_lines"])
 with (directory / "authored.png").open("xb") as handle:
     first.save(handle, format="PNG", dpi=(spec["dpi"], spec["dpi"]))
-with (directory / "authored.tiff").open("xb") as handle:
+with (directory / "authored.tiff").open("x+b") as handle:
     first.save(handle, format="TIFF", save_all=True, append_images=[second], compression="raw", dpi=(spec["dpi"], spec["dpi"]))
 with (directory / "scanned.pdf").open("xb") as handle:
     handle.write(scanned_pdf(first))

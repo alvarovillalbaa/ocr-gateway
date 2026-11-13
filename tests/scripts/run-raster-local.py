@@ -23,10 +23,12 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 import zipfile
 
 REPO = "alvarovillalbaa/ocr-gateway"
-PARENT = "98b2892f93d1128c05167cd429a50c7bc18dc16f"
+PARENT = "3eaf9945c474aff9b76ad65a16da26c57d597394"
 PRIOR_SOURCE = "0a6f41376597e47a4f8abde8f3d59432e0971824"
-BRANCH = "qa/ocr-raster-local-20261113-3"
+SECOND_SOURCE = "98b2892f93d1128c05167cd429a50c7bc18dc16f"
+BRANCH = "qa/ocr-raster-local-20261113-4"
 PRIOR_RECEIPT_SHA = "a37184b3936dea954fa5f49f3afd87adec852685bcdddabda8dea250a024c86b"
+THIRD_RECEIPT_SHA = "2fc8f90b47f407dab9b95360b7cbde58037d7fca2655577fb6da2c9ec1abce72"
 RUNTIME_SHA = "d128d3ee5410c8a1ee8c2ccc188259ba25ead0a873f4c961678ec1f9c1f1a316"
 PROTOCOL_SHA = "ec97ea9368b06251030887705f1ab62661c6fd594355ef0e39a489dc25999f29"
 R01_CAPTURE = """import json,runpy,sys
@@ -264,6 +266,9 @@ def prepare_apt():
                  "Previously observed exact native package identity")
         else:
             need(expected == {"name": "libgif7", "version": "5.2.2-1ubuntu1.2", "architecture": "amd64"}, "Only fixed GIF decoder addition")
+        previous = third_packages[expected["name"]]
+        need(previous["filename"] == filename and previous["sha256"] == fields["SHA256"] and previous["bytes"] == size,
+             "All six prior observed native identities unchanged")
         need(0 < size < 32 * 1024**2, "Package size bound")
         name = PurePosixPath(filename).name
         fetch(name, "https://archive.ubuntu.com/ubuntu/" + filename, size, expected_sha=fields["SHA256"], expected_bytes=size)
@@ -295,11 +300,15 @@ try:
     need(event["ref_type"] == "branch" and event["ref"] == BRANCH and event["repository"]["private"] is False, "Public branch event")
     need(subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip() == source and subprocess.check_output(["git", "rev-parse", "HEAD^"], text=True).strip() == PARENT, "Exact prepared source/parent")
     repair_paths = {"AGENTS.md", "tests/scripts/run-raster-local.py", "docs/proposals/raster-local-v1.md", "docs/proposals/raster-local-v1.workflow.yml.example",
-                    "docs/studies/raster-runtime-v2.json", "docs/results/2026/11-13/raster-local-attempt-2.json", "docs/results/2026/11-13/raster-local-attempt-2.zip",
-                    "docs/results/2026/11-13/raster-local-attempt-2.md"}
+                    "tests/helpers/raster_fixtures.py", "docs/results/2026/11-13/raster-local-attempt-3.json", "docs/results/2026/11-13/raster-local-attempt-3.zip",
+                    "docs/results/2026/11-13/raster-local-attempt-3.md"}
     changes = set(subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"], text=True).splitlines())
     need(changes == repair_paths, "Exact changed control/evidence paths only")
     need((repo / "AGENTS.md").read_bytes().startswith(subprocess.check_output(["git", "show", PARENT + ":AGENTS.md"])), "Append-only instructions")
+    previous_helper = subprocess.check_output(["git", "show", PARENT + ":tests/helpers/raster_fixtures.py"])
+    need(previous_helper.count(b'"authored.tiff").open("xb")') == 1 and
+         (repo / "tests/helpers/raster_fixtures.py").read_bytes() == previous_helper.replace(b'"authored.tiff").open("xb")', b'"authored.tiff").open("x+b")'),
+         "Exclusive read/write TIFF handle is the only fixture-writer change")
     need(sys.version_info[:2] == (3, 12) and platform.machine() == "x86_64", "Predeclared Python/platform")
     protocol_raw = (repo / "docs/studies/raster-local-v1.json").read_bytes()
     need(sha(protocol_raw) == PROTOCOL_SHA, "Predeclared raster protocol bytes")
@@ -311,8 +320,16 @@ try:
     second_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-2.json").read_bytes()
     need(sha(second_raw) == runtime_supplement["observed_failure"]["receipt_sha256"], "Original second failed receipt")
     second = json.loads(second_raw)
-    need(second["sourceCommit"] == PARENT and second["accepted"] is False and second["checks"] == {} and "recognitionFreeze" not in second,
+    need(second["sourceCommit"] == SECOND_SOURCE and second["accepted"] is False and second["checks"] == {} and "recognitionFreeze" not in second,
          "No prior model/case result carried")
+    third_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-3.json").read_bytes()
+    need(sha(third_raw) == THIRD_RECEIPT_SHA, "Original third failed receipt")
+    third = json.loads(third_raw)
+    need(third["sourceCommit"] == PARENT and third["accepted"] is False and third["checks"] == {} and "recognitionFreeze" not in third,
+         "No third recognition/case result carried")
+    third_packages = {row["name"]: row for row in third["apt"]["packages"]}
+    need(set(third_packages) == {row["name"] for row in protocol["apt"]["packages"] + runtime_supplement["additional_packages"]}, "Exact six native identities")
+    previous_png = next(row for row in third["cleanup"]["ownedLeafVector"] if row["path"] == "fixtures/authored.png")
     prior_raw = (repo / "docs/results/2026/11-13/raster-local-attempt-1.json").read_bytes()
     need(sha(prior_raw) == PRIOR_RECEIPT_SHA, "Original first failed receipt")
     prior = json.loads(prior_raw)
@@ -325,6 +342,8 @@ try:
     report["protocol"] = {"sha256": PROTOCOL_SHA, "original": capture(protocol_raw)}
     report["runtimeSupplement"] = {"sha256": RUNTIME_SHA, "original": capture(runtime_raw)}
     report["priorMetadataBinding"] = {"originalReceiptSha256": PRIOR_RECEIPT_SHA, "actualOcrCasesCarried": 0, "packages": prior_packages}
+    report["fixtureIoRepair"] = {"originalReceiptSha256": THIRD_RECEIPT_SHA, "nativePackages": third_packages,
+                                 "previousPng": previous_png, "actualOcrCasesCarried": 0, "onlyChange": "TIFF exclusive read/write file handle"}
     root = Path(tempfile.mkdtemp(prefix="ocr-raster-local-", dir=os.environ["RUNNER_TEMP"]))
     os.chmod(root, 0o700)
     identity = (root.stat().st_dev, root.stat().st_ino, root.stat().st_uid)
@@ -411,6 +430,7 @@ try:
     report["fixtureAdmission"] = json.loads(fixture_out)
     need(report["fixtureAdmission"]["nativePdfText"] == "" and report["fixtureAdmission"]["pdfFonts"] == 0 and report["fixtureAdmission"]["pdfImages"] == 1, "Image-only PDF admission")
     report["fixtures"] = inventory(fixtures)
+    need(report["fixtures"]["authored.png"] == {key: previous_png[key] for key in ("bytes", "sha256")}, "Previously rendered PNG bytes unchanged")
     report["fixtureOriginals"] = {}
     for name, identity_row in report["fixtures"].items():
         body = (fixtures / name).read_bytes()

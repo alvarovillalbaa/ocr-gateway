@@ -157,3 +157,14 @@ change. Core raster protocol/corpus/font/renderer/consumers/five native hashes
 stay exact. Move full ldd admission before engine probe and require all four
 still-unrun cases. Parent98b2892f, four modified controls/instructions plus
 supplemental JSON/three second-result files only. Previous controls retired.
+
+The [third raster invocation](docs/results/2026/11-13/raster-local-attempt-3.md)
+loaded the pinned engine successfully, then failed before recognition because
+Pillow's multi-frame TIFF writer needs a readable handle. Preserve all42
+original streams; all four cases remain unrun. Change only the helper's TIFF
+open mode xb to x+b, guarded as one exact replacement. Corpus/font/rendering,
+protocol/runtime JSONs, six native package identities and both consumers stay
+exact. Bind the already rendered PNG hash and all six observed archive hashes
+before recognition. Parent3eaf9945, five modified control/instruction/helper
+files plus three third-result files; exact QA4/path in proposal. All prior
+controls retired, all original bounds unchanged, no model/case pass carried.
