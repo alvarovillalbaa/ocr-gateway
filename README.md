@@ -151,8 +151,12 @@ passes independently. The separate [optional PDF qualification](docs/results/202
 accepts four authored identities across two invocations on installed0.2.0 with
 real PyMuPDF1.26.6: native text/page geometry, Node citations/chunks, blank-page
 warnings and malformed refusal. The first observer failure remains preserved;
-no passed case was replayed. Scanned/image OCR, live providers, other runtime
-profiles and full-product acceptance remain open.
+no passed case was replayed. The separate [raster qualification](docs/results/2026/11-13/raster-local.md)
+passes four real installed-consumer checks with fixed English TIFF/PNG/scanned
+PDF inputs and malformed-image refusal using private Tesseract5.3.4. Exact
+words, image provenance and UTF16 citations/chunks are retained. Three earlier
+prerequisite failures remain preserved. Broad OCR quality, live providers,
+other runtime profiles and full-product acceptance remain open.
 
 ## Citations, visual content and chunks
 

@@ -1,11 +1,12 @@
 # Installed raster and scanned-PDF OCR
 
-13 November 2026. The [first actual invocation](../results/2026/11-13/raster-local-attempt-1.md)
+13 November 2026. **Scope closed:** [R01–R04 passed together](../results/2026/11-13/raster-local.md)
+at291edf87; all temporary controls are retired. The [first actual invocation](../results/2026/11-13/raster-local-attempt-1.md)
 failed at a process observer before recognition. The [second invocation](../results/2026/11-13/raster-local-attempt-2.md)
 retained all outcomes and reached the engine probe, which refused a missing
 libgif decoder. The [third invocation](../results/2026/11-13/raster-local-attempt-3.md)
 loaded the engine, then refused a write-only TIFF fixture handle. All four OCR
-identities remain **UNRUN**. Changed controls
+identities were still **UNRUN** before the changed fourth control passed. Historical changed controls
 and the separately frozen runtime supplement are defined below.
 The owner's standing all-work approval
 covers this separate Tier2 integration packet. It addresses the core image/

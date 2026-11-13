@@ -77,3 +77,15 @@ The Python wheel was built offline using the installed Python 3.11/setuptools to
 - React/browser behavior, a public gateway deployment, distributed authentication/rate limits, npm registry and PyPI registry publication.
 
 The GitHub release contains installable npm/Python artifacts and checksums. GitHub publication is verified separately from local writes by checking repository/release metadata and the remote commit.
+
+## 13 November 2026: installed raster profile
+
+The historical bootstrap limits above remain as observed. The separate
+[raster qualification](results/2026/11-13/raster-local.md) now passes real
+Tesseract TIFF/PNG/image-only-PDF extraction and malformed-image refusal on
+unchanged installed0.2.0 archives. Exact words, image provenance, UTF16 anchors,
+frozen native/model/input bytes and owned teardown are retained with all three
+earlier prerequisite failures. Its52 final streams/four cases and earlier
+packets pass a data-only audit; all temporary CI controls are retired. This
+narrow Linux/English profile does not imply broad accuracy, arbitrary-file
+security, live-provider, registry, hosted-service or full-product acceptance.

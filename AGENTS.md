@@ -168,3 +168,14 @@ exact. Bind the already rendered PNG hash and all six observed archive hashes
 before recognition. Parent3eaf9945, five modified control/instruction/helper
 files plus three third-result files; exact QA4/path in proposal. All prior
 controls retired, all original bounds unchanged, no model/case pass carried.
+
+The [raster packet](docs/results/2026/11-13/raster-local.md) is now closed:
+R01–R04 passed together at291edf87 on unchanged public0.2.0 archives with real
+Tesseract/English recognition. All three prerequisite failures remain original,
+including first command14's unknown outcome. The retained-data verifier accepts
+154 original streams/14 guards across four packets and final exact words,
+images/UTF16 anchors/frozen inputs/owned teardown. All four workflows disabled,
+exact QA refs deleted/read back empty. Do not replay this closed profile.
+Core protocol/runtime JSONs and product/release inputs stay exact. Native
+diagnostic, network/process/whole-host and broad OCR/security/platform limits
+remain explicit; registry/hosting/live-provider/full-product gates stay open.

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocr.raster-original-receipt-audit",
+  "passed": true,
+  "dataOnly": true,
+  "verifierSha256": "c9d7a35014c79501574645b3b4cf08acc4bd9eddad461321efa84fbdc35b6b32",
+  "parserFixtureOrModelReexecuted": false,
+  "acceptedCases": [
+    "R01",
+    "R02",
+    "R03",
+    "R04"
+  ],
+  "firstCommand14Outcome": "unknown and preserved",
+  "priorFailuresPreserved": true,
+  "originalStreams": 154,
+  "sourceGuards": 14,
+  "attempts": [
+    {
+      "attempt": 1,
+      "sourceCommit": "0a6f41376597e47a4f8abde8f3d59432e0971824",
+      "sourceFiles": 98,
+      "rawSha256": "a37184b3936dea954fa5f49f3afd87adec852685bcdddabda8dea250a024c86b",
+      "completeOriginalStreams": 26,
+      "commands": 14,
+      "sourceGuards": 3,
+      "accepted": false,
+      "ownedLeaves": 1150,
+      "regularBytes": 264118615,
+      "rootAbsent": true
+    },
+    {
+      "attempt": 2,
+      "sourceCommit": "98b2892f93d1128c05167cd429a50c7bc18dc16f",
+      "sourceFiles": 101,
+      "rawSha256": "dddde4bc7046589be580052cdb7ea52a77bd8e3b7350dfe90c20cd3d8d5777cb",
+      "completeOriginalStreams": 34,
+      "commands": 17,
+      "sourceGuards": 3,
+      "accepted": false,
+      "ownedLeaves": 2047,
+      "regularBytes": 351139305,
+      "rootAbsent": true
+    },
+    {
+      "attempt": 3,
+      "sourceCommit": "3eaf9945c474aff9b76ad65a16da26c57d597394",
+      "sourceFiles": 105,
+      "rawSha256": "2fc8f90b47f407dab9b95360b7cbde58037d7fca2655577fb6da2c9ec1abce72",
+      "completeOriginalStreams": 42,
+      "commands": 21,
+      "sourceGuards": 3,
+      "accepted": false,
+      "ownedLeaves": 2066,
+      "regularBytes": 365317589,
+      "rootAbsent": true
+    },
+    {
+      "attempt": 4,
+      "sourceCommit": "291edf87fdf847603dd02c5c9b3bef71e798e2fc",
+      "sourceFiles": 108,
+      "rawSha256": "2bec62a5bd95d1565848c6eb925b1a96e7d7f677fac1bcf851aed114510c4f14",
+      "completeOriginalStreams": 52,
+      "commands": 26,
+      "sourceGuards": 5,
+      "accepted": true,
+      "ownedLeaves": 2079,
+      "regularBytes": 368365333,
+      "rootAbsent": true
+    }
+  ],
+  "fixtures": {
+    "authored.png": {
+      "bytes": 13842,
+      "sha256": "132e6f7eaf68486dc82df512cadf7fb94247a99121531562dae391b0c368653e"
+    },
+    "authored.tiff": {
+      "bytes": 2880384,
+      "sha256": "251b19a13175ef322f99bc1f7787ec6df358388a2f020e197c9fa739901929e3"
+    },
+    "invalid.png": {
+      "bytes": 51,
+      "sha256": "29c20f6cbe334d8c43658b436e5e4a5b100b88930f03c98d8596cda6463f7306"
+    },
+    "scanned.pdf": {
+      "bytes": 11246,
+      "sha256": "75fa336c2b0d8645d5ab93cdfbdd73fb9f93d8757d4053f3bbe86467e9ce3adf"
+    }
+  },
+  "limits": [
+    "Retained-data audit, not a new parser/model execution or independent runner attestation.",
+    "Fixed English integration fixtures do not establish broad OCR quality or arbitrary-file security.",
+    "Product suppresses native recognition diagnostics and trims text-file edges; supervisor/application originals are retained.",
+    "Scoped process snapshots and Node/Python tripwires do not attest every child lifetime, whole-host cleanup or native network confinement.",
+    "Original installed-member comparisons were performed on the runner; no weights or wheels were downloaded locally."
+  ]
+}

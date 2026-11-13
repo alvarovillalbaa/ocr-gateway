@@ -46,7 +46,7 @@ data-only verifier checks the retained complete output against the exact five
 installed paths. The original failed verdict remains unchanged; no functional
 checks were rerun. Temporary execution controls are retired.
 
-## New raster integration qualification
+## Completed raster integration qualification
 
 `integration/raster-local-python.py` and `integration/raster-local-node.mjs`
 are new Tier2 installed-consumer integration entries; they use no database,
@@ -57,5 +57,9 @@ and English traineddata execute only in owned external CI, under
 `scripts/run-raster-local.py` and the [exact scope](../docs/proposals/raster-local-v1.md).
 The [protocol](../docs/studies/raster-local-v1.json) fixes four identities,
 versions/corpus/expected word order and proof limits before output. This is
-UNRUN preparation, not OCR accuracy or semantic-visual quality evidence. No
+now [four accepted identities](../docs/results/2026/11-13/raster-local.md) in one
+actual invocation at291edf87, after three preserved prerequisite failures. All
+52 final original streams and four full authored inputs audit successfully;
+all temporary controls are retired. This is narrow integration evidence,
+not general OCR accuracy or semantic-visual quality evidence. No
 closed PDF, chart, React or public-consumer case is repeated.

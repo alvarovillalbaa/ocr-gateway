@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "kind": "ocr.raster-temporary-control-retirement",
+  "date": "2026-11-13",
+  "repository": "alvarovillalbaa/ocr-gateway",
+  "allRunsTerminal": true,
+  "acceptedRun": 43411077345,
+  "acceptedJob": 131837354089,
+  "originalReceiptsRetained": true,
+  "workflowReadbackMethod": "existing gh api; connected fetch does not support workflow-registration reads",
+  "workflows": [
+    {
+      "id": 417109498,
+      "path": ".github/workflows/raster-local-v1.yml",
+      "state": "disabled_manually",
+      "branch": "qa/ocr-raster-local-20261113-1",
+      "shaVerifiedBeforeDeletion": "7aec0e3b22d7be7f7b94e5df850461b717c66858",
+      "branchDeleted": true
+    },
+    {
+      "id": 417122755,
+      "path": ".github/workflows/raster-local-v1-2.yml",
+      "state": "disabled_manually",
+      "branch": "qa/ocr-raster-local-20261113-2",
+      "shaVerifiedBeforeDeletion": "8e1a45e98721d92de59b4f29314a1d42f25fb30b",
+      "branchDeleted": true
+    },
+    {
+      "id": 417152311,
+      "path": ".github/workflows/raster-local-v1-3.yml",
+      "state": "disabled_manually",
+      "branch": "qa/ocr-raster-local-20261113-3",
+      "shaVerifiedBeforeDeletion": "24e97691869119d28f246d1f66e612d38ad90c2e",
+      "branchDeleted": true
+    },
+    {
+      "id": 417158281,
+      "path": ".github/workflows/raster-local-v1-4.yml",
+      "state": "disabled_manually",
+      "branch": "qa/ocr-raster-local-20261113-4",
+      "shaVerifiedBeforeDeletion": "3a01c92637eeb880834fb73dfb34d47f514f203f",
+      "branchDeleted": true
+    }
+  ],
+  "matchingRefsReadback": [],
+  "limits": [
+    "Registration and exact-ref retirement only; owned runner teardown is recorded separately in each original receipt.",
+    "Failed runs remain failed; first command14 actual exit and original streams remain unknown."
+  ]
+}
